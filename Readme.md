@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Арсений Кудрявцев](https://up.htmlacademy.ru/javascript/17/user/499817).
-* Наставник: `Неизвестно`.
+* Наставник: [Михаил Семиколенов](https://htmlacademy.ru/profile/id19706).
 
 ---
 
