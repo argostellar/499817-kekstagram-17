@@ -42,8 +42,8 @@ var randomTrueFalse = function () {
   return state;
 };
 
-// функция генерации массива чисел из указаного диапазона
-var ordinalArray = function (arrayLength) {
+// функция генерации массива чисел указанной длины
+var generateArray = function (arrayLength) {
   var array = [];
   for (var i = 0; i < arrayLength; i++) {
     array[i] = i;
@@ -51,6 +51,39 @@ var ordinalArray = function (arrayLength) {
   return array;
 };
 
+// функция выведет массив заданной длины
+var orderArray = function (lowerNumberBorder, upperNumberBorder) {
+  var length = upperNumberBorder - lowerNumberBorder;
+  var array = generateArray(length);
+  return array;
+};
+
+// массив будет заполнен сперва пустыми (до нижней границы), затем непустыми до верхней
+var orderCurrentArray = function (lowerNumberBorder, upperNumberBorder) {
+  var length = upperNumberBorder - lowerNumberBorder;
+  var array = [];
+  for (var i = lowerNumberBorder; i < upperNumberBorder; i++) {
+    array[i] = i;
+  }
+  return array;
+};
+
+// функция выведет массив чисел от нижней до верхней границы, заполнив ячейки от 0 до длины
+var orderSomeArray = function (lowerNumberBorder, upperNumberBorder) {
+  var length = upperNumberBorder - lowerNumberBorder;
+  var array = [];
+  for (var i = 0; i <= length; i++) {
+    array[i] = lowerNumberBorder + i;
+  }
+  return array;
+};
+
+var keko = orderSomeArray(23,49);
+var demo = orderCurrentArray(23, 49);
+var dumo = orderArray(23, 49);
+console.log(dumo); // выведет от 0 до 26
+console.log(demo); // выведет пустые до 23, затем от 23 до 48
+console.log(keko); //
 // функция генерации текста сообщения (склеивания) из одной или двух строк (работает)
 var generateMessageText = function (firstPart, secondPart) {
   var messageText = 0;
@@ -112,7 +145,7 @@ var generatePhotoObject = function (commentObjectsArray, commentsAmount) {
   // photos/i.jpg, где i это число от 1 до 25. Адреса картинок не должны повторяться.
   // создавать ли здесь функцию с генерацией массива объектов url
   // ( и функцией единичной генерации)
-  var photoObjectUrl = ;
+  var photoObjectUrl = 4;
   photoObject.url = photoObjectUrl;
   var photoObjectLikes = randomNumber(15, 200);
   photoObject.likes = photoObjectLikes;
