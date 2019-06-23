@@ -133,7 +133,7 @@ var generatePhotoObject = function (urlAmount, commentsAmount, messageTextArray,
   var urlArray = generatePhotoUrlArray(urlRange);
   var urlRandom = randomNumber(1, urlArray.length);
   photoObjectUrl = urlArray[urlRandom];
-  //urlArray.splice(urlRandom, 1, urlArray[urlRandom + 1]);
+  // urlArray.splice(urlRandom, 1, urlArray[urlRandom + 1]);
   // конец реализации
 
   photoObject.url = photoObjectUrl;
@@ -150,7 +150,7 @@ var generatePhotoObject = function (urlAmount, commentsAmount, messageTextArray,
 };
 
 
-// функция генерации массива объектов Фото
+// функция генерации массива объектов Фото (работает)
 var generatePhotoObjectsArray = function (photoAmount, commentsAmount, messageTextArray, nameValueArray, arrayLength) {
   var photoArray = [];
   for (var i = 0; i < photoAmount; i++) {
@@ -159,16 +159,54 @@ var generatePhotoObjectsArray = function (photoAmount, commentsAmount, messageTe
     photoArray[i] = singeObject;
     if (singeObject.url === photoArray[i].url) {
       var urlArray = generatePhotoUrlArray(photoAmount);
-      var urlRandom = randomNumber(1, urlArray.length);
-      if (singeObject.url !== urlArray[urlRandom]) {
-        singeObject.url = urlArray[urlRandom];
-        urlArray.splice(urlRandom, 1, urlArray[urlRandom + 1]);
+      if (singeObject.url !== urlArray[i]) {
+        singeObject.url = urlArray[i];
       }
     }
   }
   return photoArray;
 };
 
+// Реализация заполнения
 
-var limo = generatePhotoObjectsArray(25, 3, messageParts, nameValues, 52);
-console.log(limo);
+// куда будут добавлятся фото
+var picturesBlock = document.querySelector('.pictures');
+// поиск шаблона
+var pictureTemplate = document.querySelector('#picture')
+  .content
+  .querySelector('.picture');
+// создаём фрагмент, который будем добавлять на страницу
+var fragment = document.createDocumentFragment();
+
+// Создание элементов
+
+var createPhoto = function (photoObject) {
+
+  var pictureElement = pictureTemplate.cloneNode(true);
+
+  var url = pictureElement.querySelector('img');
+  url.src = photoObject.url;
+
+  var likes = pictureElement.querySelector('.picture__likes');
+  likes.textContent = photoObject.likes;
+
+  var comments = pictureElement.querySelector('.picture__comments');
+  comments.textContent = photoObject.comments;
+
+  return pictureElement;
+
+};
+
+var createAmountOfPhotos = function (photoAmount, commentsAmount, messageTextArray, nameValueArray, arrayLength) {
+  var somePictures = generatePhotoObjectsArray(photoAmount, commentsAmount, messageTextArray, nameValueArray, arrayLength);
+  for (var j = 0; j < somePictures.length; j++) {
+    var singlePhoto = 0;
+    singlePhoto = somePictures[j];
+    var finalObject = createPhoto(singlePhoto);
+    fragment.appendChild(finalObject);
+  }
+  picturesBlock.appendChild(fragment);
+};
+
+// Добавление элементов на страницу
+createAmountOfPhotos(25, 3, messageParts, nameValues, 30);
