@@ -105,9 +105,8 @@ var generateCommentsArray = function (messageTextArray, nameValueArray, arrayLen
   return commentArray;
 };
 
-// функция генерации url фото
+// функция генерации url фото (работает)
 var generatePhotoUrlArray = function (arrayMaxRange, arrayMinRange) {
-  var urlNumber = 0;
   var urlArray = [];
   var array = [];
   if (arrayMinRange) {
@@ -116,47 +115,60 @@ var generatePhotoUrlArray = function (arrayMaxRange, arrayMinRange) {
   }
   array = generateRangedArray(1, arrayMaxRange);
   for (var i = 0; i < array.length; i++) {
-    var arrayRandom = randomNumber(1, array.length);
-    urlNumber = array[arrayRandom];
+    var urlNumber = 0;
+    urlNumber = array[i];
     var url = 'photos/' + urlNumber + '.jpg';
     urlArray[i] = url;
   }
   return urlArray;
 };
 
-
-var bobo = generatePhotoUrlArray(25);
-console.log(bobo);
-
-// функция проверки url
-var urlCheck = function (arrayMaxRange, arrayMinRange) {
-  var url = generatePhotoUrl(arrayMaxRange, arrayMinRange);
-  for (var i = 0; i < array; i++) {
-    if (url === url) {
-      url = generatePhotoUrl(arrayMaxRange, arrayMinRange);
-    }
-  }
-  return url;
-};
-
-
 // функция генерации объекта Фото
-var generatePhotoObject = function (commentObjectsArray, commentsAmount) {
+var generatePhotoObject = function (urlAmount, commentsAmount, messageTextArray, nameValueArray, arrayLength) {
   var photoObject = {};
-  // photos/i.jpg, где i это число от 1 до 25. Адреса картинок не должны повторяться.
-  // создавать ли здесь функцию с генерацией массива объектов url
-  // ( и функцией единичной генерации)
-  var photoObjectUrl = 4;
+  // здесь реализована уникальность каждого адреса (без повтора)
+
+  var photoObjectUrl = 0;
+  var urlRange = urlAmount;
+  var urlArray = generatePhotoUrlArray(urlRange);
+  var urlRandom = randomNumber(1, urlArray.length);
+  photoObjectUrl = urlArray[urlRandom];
+  //urlArray.splice(urlRandom, 1, urlArray[urlRandom + 1]);
+  // конец реализации
+
   photoObject.url = photoObjectUrl;
   var photoObjectLikes = randomNumber(15, 200);
   photoObject.likes = photoObjectLikes;
   // цикл с генерацией комментариев
-  var photoObjectComments = 0;
+  var photoObjectComments = [];
+  for (var i = 0; i < commentsAmount; i++) {
+    var commentsArray = generateCommentsArray(messageTextArray, nameValueArray, arrayLength);
+    photoObjectComments[i] = commentsArray[i];
+  }
   photoObject.comments = photoObjectComments;
+  return photoObject;
 };
 
+
 // функция генерации массива объектов Фото
-var generatePhotoObjectsArray = function () {
+var generatePhotoObjectsArray = function (photoAmount, commentsAmount, messageTextArray, nameValueArray, arrayLength) {
   var photoArray = [];
+  for (var i = 0; i < photoAmount; i++) {
+    var singeObject = generatePhotoObject(photoAmount, commentsAmount, messageTextArray, nameValueArray, arrayLength);
+
+    photoArray[i] = singeObject;
+    if (singeObject.url === photoArray[i].url) {
+      var urlArray = generatePhotoUrlArray(photoAmount);
+      var urlRandom = randomNumber(1, urlArray.length);
+      if (singeObject.url !== urlArray[urlRandom]) {
+        singeObject.url = urlArray[urlRandom];
+        urlArray.splice(urlRandom, 1, urlArray[urlRandom + 1]);
+      }
+    }
+  }
   return photoArray;
 };
+
+
+var limo = generatePhotoObjectsArray(25, 3, messageParts, nameValues, 52);
+console.log(limo);
