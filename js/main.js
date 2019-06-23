@@ -42,34 +42,8 @@ var randomTrueFalse = function () {
   return state;
 };
 
-// функция генерации массива чисел указанной длины
-var generateArray = function (arrayLength) {
-  var array = [];
-  for (var i = 0; i < arrayLength; i++) {
-    array[i] = i;
-  }
-  return array;
-};
-
-// функция выведет массив заданной длины
-var orderArray = function (lowerNumberBorder, upperNumberBorder) {
-  var length = upperNumberBorder - lowerNumberBorder;
-  var array = generateArray(length);
-  return array;
-};
-
-// массив будет заполнен сперва пустыми (до нижней границы), затем непустыми до верхней
-var orderCurrentArray = function (lowerNumberBorder, upperNumberBorder) {
-  var length = upperNumberBorder - lowerNumberBorder;
-  var array = [];
-  for (var i = lowerNumberBorder; i < upperNumberBorder; i++) {
-    array[i] = i;
-  }
-  return array;
-};
-
-// функция выведет массив чисел от нижней до верхней границы, заполнив ячейки от 0 до длины
-var orderSomeArray = function (lowerNumberBorder, upperNumberBorder) {
+// функция генерации массива чисел с заданным диапазоном (работает)
+var generateRangedArray = function (lowerNumberBorder, upperNumberBorder) {
   var length = upperNumberBorder - lowerNumberBorder;
   var array = [];
   for (var i = 0; i <= length; i++) {
@@ -78,12 +52,6 @@ var orderSomeArray = function (lowerNumberBorder, upperNumberBorder) {
   return array;
 };
 
-var keko = orderSomeArray(23,49);
-var demo = orderCurrentArray(23, 49);
-var dumo = orderArray(23, 49);
-console.log(dumo); // выведет от 0 до 26
-console.log(demo); // выведет пустые до 23, затем от 23 до 48
-console.log(keko); //
 // функция генерации текста сообщения (склеивания) из одной или двух строк (работает)
 var generateMessageText = function (firstPart, secondPart) {
   var messageText = 0;
@@ -137,9 +105,42 @@ var generateCommentsArray = function (messageTextArray, nameValueArray, arrayLen
   return commentArray;
 };
 
-var don = generateCommentsArray(messageParts, nameValues, 10);
-console.log(don);
+// функция генерации url фото
+var generatePhotoUrlArray = function (arrayMaxRange, arrayMinRange) {
+  var urlNumber = 0;
+  var urlArray = [];
+  var array = [];
+  if (arrayMinRange) {
+    array = generateRangedArray(arrayMinRange, arrayMaxRange);
+    urlNumber = array[randomNumber(arrayMinRange, array.length)];
+  }
+  array = generateRangedArray(1, arrayMaxRange);
+  for (var i = 0; i < array.length; i++) {
+    var arrayRandom = randomNumber(1, array.length);
+    urlNumber = array[arrayRandom];
+    var url = 'photos/' + urlNumber + '.jpg';
+    urlArray[i] = url;
+  }
+  return urlArray;
+};
 
+
+var bobo = generatePhotoUrlArray(25);
+console.log(bobo);
+
+// функция проверки url
+var urlCheck = function (arrayMaxRange, arrayMinRange) {
+  var url = generatePhotoUrl(arrayMaxRange, arrayMinRange);
+  for (var i = 0; i < array; i++) {
+    if (url === url) {
+      url = generatePhotoUrl(arrayMaxRange, arrayMinRange);
+    }
+  }
+  return url;
+};
+
+
+// функция генерации объекта Фото
 var generatePhotoObject = function (commentObjectsArray, commentsAmount) {
   var photoObject = {};
   // photos/i.jpg, где i это число от 1 до 25. Адреса картинок не должны повторяться.
@@ -152,4 +153,10 @@ var generatePhotoObject = function (commentObjectsArray, commentsAmount) {
   // цикл с генерацией комментариев
   var photoObjectComments = 0;
   photoObject.comments = photoObjectComments;
+};
+
+// функция генерации массива объектов Фото
+var generatePhotoObjectsArray = function () {
+  var photoArray = [];
+  return photoArray;
 };
