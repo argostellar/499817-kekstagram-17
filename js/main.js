@@ -95,7 +95,7 @@ var generateCommentator = function (nameValue, numberValue) {
   commentator.name = commentatorName;
 
   return commentator;
-}
+};
 
 // функция генерации массива объектов "Комментатор" (работает)
 var generateCommentatorArray = function (nameValueArray) {
@@ -105,7 +105,7 @@ var generateCommentatorArray = function (nameValueArray) {
     commentatorArray[i] = singleCommentator;
   }
   return commentatorArray;
-}
+};
 
 // функция генерации объекта коментария
 var generateComment = function (messageTextArray, nameValueArray) {
@@ -221,7 +221,7 @@ var createPhoto = function (photoObject) {
   // строчки сливаются в белую линию, как я понимаю, это изменится в следующих
   // заданиях?
   for (var i = 0; i < singleComment.length; i++) {
-  comments.textContent = singleComment[i].message;
+    comments.textContent = singleComment[i].message;
   }
 
   return pictureElement;
@@ -241,7 +241,3 @@ var createAmountOfPhotos = function (photoAmount, commentsAmount, messageTextArr
 
 // Добавление элементов на страницу
 createAmountOfPhotos(25, 3, MESSAGE_PARTS, NAME_VALUES, 30);
-
-
-
-
