@@ -1,6 +1,6 @@
 'use strict';
 
-var messageParts = [
+var MESSAGE_PARTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -9,7 +9,7 @@ var messageParts = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-var nameValues = [
+var NAME_VALUES = [
   'Артём',
   'Босс Кекс',
   'Фицджеральд',
@@ -74,6 +74,9 @@ var generateCommentText = function (messageTextArray, isSimple) {
     if (firstPart === secondPart) {
       secondPart = randomNumber(0, messageTextArray.length);
     }
+    if (firstPart === secondPart && i === messageTextArray.length - 1) {
+      i = 0;
+    }
   }
   if (isSimple) {
     commentText = generateMessageText(messageTextArray[firstPart]);
@@ -83,15 +86,37 @@ var generateCommentText = function (messageTextArray, isSimple) {
   return commentText;
 };
 
+// функция генерации объекта "Комментатор" (работает)
+var generateCommentator = function (nameValue, numberValue) {
+  var commentator = {};
+  var commentatorAvatar = 'img/avatar-' + numberValue + '.svg';
+  commentator.avatar = commentatorAvatar;
+  var commentatorName = nameValue;
+  commentator.name = commentatorName;
+
+  return commentator;
+}
+
+// функция генерации массива объектов "Комментатор" (работает)
+var generateCommentatorArray = function (nameValueArray) {
+  var commentatorArray = [];
+  for (var i = 0; i < nameValueArray.length; i++) {
+    var singleCommentator = generateCommentator(nameValueArray[i], i + 1);
+    commentatorArray[i] = singleCommentator;
+  }
+  return commentatorArray;
+}
 
 // функция генерации объекта коментария
 var generateComment = function (messageTextArray, nameValueArray) {
   var comment = {};
-  var commentAvatar = 'img/avatar-' + randomNumber(1, 6) + '.svg';
-  comment.avatar = commentAvatar;
+  var commentatorArray = generateCommentatorArray(nameValueArray);
+  var randomCommentator = randomNumber(0, commentatorArray.length - 1);
+  var commmentAvatar = commentatorArray[randomCommentator].avatar;
+  comment.avatar = commmentAvatar;
   var commentText = generateCommentText(messageTextArray, randomTrueFalse());
   comment.message = commentText;
-  var commentName = nameValueArray[randomNumber(0, nameValueArray.length - 1)];
+  var commentName = commentatorArray[randomCommentator].name;
   comment.name = commentName;
   return comment;
 };
@@ -191,7 +216,13 @@ var createPhoto = function (photoObject) {
   likes.textContent = photoObject.likes;
 
   var comments = pictureElement.querySelector('.picture__comments');
-  comments.textContent = photoObject.comments;
+  var singleComment = photoObject.comments;
+  // изменил реализацию вставки комментариев, но там сейчас некрасивая вставка
+  // строчки сливаются в белую линию, как я понимаю, это изменится в следующих
+  // заданиях?
+  for (var i = 0; i < singleComment.length; i++) {
+  comments.textContent = singleComment[i].message;
+  }
 
   return pictureElement;
 
@@ -209,4 +240,8 @@ var createAmountOfPhotos = function (photoAmount, commentsAmount, messageTextArr
 };
 
 // Добавление элементов на страницу
-createAmountOfPhotos(25, 3, messageParts, nameValues, 30);
+createAmountOfPhotos(25, 3, MESSAGE_PARTS, NAME_VALUES, 30);
+
+
+
+
