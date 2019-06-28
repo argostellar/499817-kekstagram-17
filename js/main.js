@@ -264,11 +264,11 @@ var onUploadChange = function (evt) {
 };
 
 var setDefaultConditions = function () {
-    // перемещение пина на максимальное значение
-    var maxPinPosition = slider.offsetWidth + 'px';
-    pin.style.left = maxPinPosition;
-    depth.style.width = '100%';
-    effectLevel.classList.add('hidden');
+  // перемещение пина на максимальное значение
+  var maxPinPosition = slider.offsetWidth + 'px';
+  pin.style.left = maxPinPosition;
+  depth.style.width = '100%';
+  effectLevel.classList.add('hidden');
 };
 
 uploadControl.addEventListener('change', onUploadChange);
@@ -352,11 +352,11 @@ var applyEffect = function (effectValue) {
     previewImage.removeAttribute('class');
     effectLevel.classList.add('hidden');
   }
-}
+};
 
 var onRadioClick = function (evt) {
   applyEffect(evt.target.value);
-}
+};
 
 effectNone.addEventListener('click', onRadioClick);
 effectChrome.addEventListener('click', onRadioClick);
@@ -370,11 +370,11 @@ effectHeat.addEventListener('click', onRadioClick);
 var currentRadio = function () {
   var current = effectsList.querySelector('input:checked');
   return current;
-}
+};
 
 
 var effectLevel = upload.querySelector('.effect-level');
-var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+// var effectLevelValue = effectLevel.querySelector('.effect-level__value');
 var slider = effectLevel.querySelector('.effect-level__line');
 var depth = effectLevel.querySelector('.effect-level__depth');
 var pin = effectLevel.querySelector('.effect-level__pin');
@@ -384,7 +384,7 @@ var calculateChangeValue = function () {
   var pinCurrentLoc = pin.offsetLeft;
   var sliderWidth = slider.offsetWidth;
   // пропорция определения величины
-  value = (100 * pinCurrentLoc)/(sliderWidth);
+  value = (100 * pinCurrentLoc) / (sliderWidth);
   // в итоге, функция должна вернуть значение изменения пина
   return value;
 };
@@ -482,13 +482,9 @@ var onPinMouseUp = function () {
   changeLevel(currentRadio().value, calculateChangeValue());
 };
 
-
-
 pin.addEventListener('mouseup', onPinMouseUp);
 
-
 // закрытие формы редактирования загружаемого изображения
-
 var uploadCancel = upload.querySelector('.img-upload__cancel');
 
 var resetConditions = function () {
@@ -499,9 +495,9 @@ var resetConditions = function () {
   previewImage.removeAttribute('class');
 };
 
-var onCloseClick = function (evt) {
+var onCloseClick = function () {
   close(uploadForm);
   resetConditions();
-}
+};
 
 uploadCancel.addEventListener('click', onCloseClick);
