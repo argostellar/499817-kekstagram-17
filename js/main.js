@@ -335,12 +335,14 @@ scaleBigger.addEventListener('click', onButtonClick);
 
 
 var effectsList = upload.querySelector('.effects__list');
+/*
 var effectNone = effectsList.querySelector('input[type="radio"][value="none"]');
 var effectChrome = effectsList.querySelector('input[type="radio"][value="chrome"]');
 var effectSepia = effectsList.querySelector('input[type="radio"][value="sepia"]');
 var effectMarvin = effectsList.querySelector('input[type="radio"][value="marvin"]');
 var effectPhobos = effectsList.querySelector('input[type="radio"][value="phobos"]');
 var effectHeat = effectsList.querySelector('input[type="radio"][value="heat"]');
+*/
 
 
 var applyEffect = function (effectValue) {
@@ -358,13 +360,15 @@ var onRadioClick = function (evt) {
   applyEffect(evt.target.value);
 };
 
+effectsList.addEventListener('click', onRadioClick);
+/*
 effectNone.addEventListener('click', onRadioClick);
 effectChrome.addEventListener('click', onRadioClick);
 effectSepia.addEventListener('click', onRadioClick);
 effectMarvin.addEventListener('click', onRadioClick);
 effectPhobos.addEventListener('click', onRadioClick);
 effectHeat.addEventListener('click', onRadioClick);
-
+*/
 // слайдер
 
 var currentRadio = function () {
@@ -389,94 +393,79 @@ var calculateChangeValue = function () {
   return value;
 };
 
+var effectsStats = {
+  'chrome': {
+    currentEffect: 'grayscale',
+    convertedValue: 0.01,
+    bottomValue: 0,
+    topValue: 1,
+    unitsOfMeasure: ''
+  },
+  'sepia': {
+    currentEffect: 'sepia',
+    convertedValue: 0.01,
+    bottomValue: 0,
+    topValue: 1,
+    unitsOfMeasure: ''
+  },
+  'marvin': {
+    currentEffect: 'invert',
+    convertedValue: 1,
+    bottomValue: 0,
+    topValue: 100,
+    unitsOfMeasure: '%'
+  },
+  'phobos': {
+    currentEffect: 'blur',
+    convertedValue: 0.03,
+    bottomValue: 0,
+    topValue: 3,
+    unitsOfMeasure: 'px'
+  },
+  'heat': {
+    currentEffect: 'brightness',
+    convertedValue: 0.02,
+    bottomValue: 1,
+    topValue: 3,
+    unitsOfMeasure: ''
+  },
+  'none': {
+    currentEffect: '',
+    convertedValue: 0,
+    bottomValue: 0,
+    topValue: 0,
+    unitsOfMeasure: ''
+  }
+};
+
 var changeLevel = function (effect, effectValue) {
   var currentEffect = '';
-  var changeValue = 0; // effectValue4
+  var changeValue = 0;
   var convertedValue = 0;
   var bottomValue = 0;
   var topValue = 0;
+  var currentUnits = 0;
 
-  if (effect === 'chrome') {
-    previewImage.style.filter = '';
-    currentEffect = 'grayscale';
-    convertedValue = 0.01;
-    bottomValue = 0;
-    topValue = 1;
-    changeValue = bottomValue + effectValue * convertedValue;
-    if (changeValue > topValue) {
-      changeValue = topValue;
-    }
-    if (changeValue < bottomValue) {
-      changeValue = bottomValue;
-    }
-    previewImage.style.filter = currentEffect + '(' + changeValue + ')';
+  previewImage.style.filter = '';
+
+  currentEffect = effectsStats[effect].currentEffect;
+  convertedValue = effectsStats[effect].convertedValue;
+  bottomValue = effectsStats[effect].bottomValue;
+  topValue = effectsStats[effect].topValue;
+  currentUnits = effectsStats[effect].unitsOfMeasure;
+
+  changeValue = bottomValue + effectValue * convertedValue;
+
+  if (changeValue > topValue) {
+    changeValue = topValue;
   }
-  if (effect === 'sepia') {
-    previewImage.style.filter = '';
-    currentEffect = 'sepia';
-    convertedValue = 0.01;
-    bottomValue = 0;
-    topValue = 1;
-    changeValue = bottomValue + effectValue * convertedValue;
-    if (changeValue > topValue) {
-      changeValue = topValue;
-    }
-    if (changeValue < bottomValue) {
-      changeValue = bottomValue;
-    }
-    previewImage.style.filter = currentEffect + '(' + changeValue + ')';
+  if (changeValue < bottomValue) {
+    changeValue = bottomValue;
   }
-  if (effect === 'marvin') {
-    previewImage.style.filter = '';
-    currentEffect = 'invert';
-    convertedValue = 1;
-    bottomValue = 0;
-    topValue = 100;
-    changeValue = bottomValue + effectValue * convertedValue;
-    if (changeValue > topValue) {
-      changeValue = topValue;
-    }
-    if (changeValue < bottomValue) {
-      changeValue = bottomValue;
-    }
-    changeValue += '%';
-    previewImage.style.filter = currentEffect + '(' + changeValue + ')';
-  }
-  if (effect === 'phobos') {
-    previewImage.style.filter = '';
-    currentEffect = 'blur';
-    convertedValue = 0.03;
-    bottomValue = 0;
-    topValue = 3;
-    changeValue = bottomValue + effectValue * convertedValue;
-    if (changeValue > topValue) {
-      changeValue = topValue;
-    }
-    if (changeValue < bottomValue) {
-      changeValue = bottomValue;
-    }
-    changeValue += 'px';
-    previewImage.style.filter = currentEffect + '(' + changeValue + ')';
-  }
-  if (effect === 'heat') {
-    previewImage.style.filter = '';
-    currentEffect = 'brightness';
-    convertedValue = 0.02;
-    bottomValue = 1;
-    topValue = 3;
-    changeValue = bottomValue + effectValue * convertedValue;
-    if (changeValue > topValue) {
-      changeValue = topValue;
-    }
-    if (changeValue < bottomValue) {
-      changeValue = bottomValue;
-    }
-    previewImage.style.filter = currentEffect + '(' + changeValue + ')';
-  }
-  if (effect === 'none') {
-    previewImage.style.filter = '';
-  }
+
+  previewImage.style.filter = currentEffect + '(' + changeValue + currentUnits + ')';
 };
+
 
 var onPinMouseUp = function () {
   changeLevel(currentRadio().value, calculateChangeValue());
