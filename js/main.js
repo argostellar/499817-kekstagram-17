@@ -217,12 +217,7 @@ var createPhoto = function (photoObject) {
 
   var comments = pictureElement.querySelector('.picture__comments');
   var singleComment = photoObject.comments;
-  // изменил реализацию вставки комментариев, но там сейчас некрасивая вставка
-  // строчки сливаются в белую линию, как я понимаю, это изменится в следующих
-  // заданиях?
-  for (var i = 0; i < singleComment.length; i++) {
-    comments.textContent = singleComment[i].message;
-  }
+  comments.textContent = singleComment.length;
 
   return pictureElement;
 
@@ -241,3 +236,257 @@ var createAmountOfPhotos = function (photoAmount, commentsAmount, messageTextArr
 
 // Добавление элементов на страницу
 createAmountOfPhotos(25, 3, MESSAGE_PARTS, NAME_VALUES, 30);
+
+// задание 7 - подробности -----------------------------------------------------------
+
+// фунция "снятия" класса hidden
+var open = function (hiddenBlock) {
+  hiddenBlock.classList.remove('hidden');
+};
+
+var close = function (block) {
+  block.classList.add('hidden');
+};
+
+// 1.2 ===============================
+
+var upload = document.querySelector('.img-upload');
+var uploadControl = upload.querySelector('#upload-file');
+// var uploadControlLabel = upload.querySelector('.img-upload__control');
+var uploadForm = upload.querySelector('.img-upload__overlay');
+
+// правильно ли реализована эта функция? А именно проверка условия
+var onUploadChange = function (evt) {
+  if (evt.value !== 0) {
+    open(uploadForm);
+    setDefaultConditions();
+  }
+};
+
+var setDefaultConditions = function () {
+  // перемещение пина на максимальное значение
+  var maxPinPosition = slider.offsetWidth + 'px';
+  pin.style.left = maxPinPosition;
+  depth.style.width = '100%';
+  effectLevel.classList.add('hidden');
+};
+
+uploadControl.addEventListener('change', onUploadChange);
+
+// 2.1 =================================
+
+var scale = uploadForm.querySelector('.scale');
+var scaleValue = scale.querySelector('.scale__control--value');
+var scaleSmaller = scale.querySelector('.scale__control--smaller');
+var scaleBigger = scale.querySelector('.scale__control--bigger');
+var preview = uploadForm.querySelector('.img-upload__preview');
+var previewImage = preview.querySelector('img');
+
+// Стоит ли записать эти числа в формате констант?
+var basicValue = 100;
+var stepValue = 25;
+var maxValue = 100;
+var minValue = 25;
+
+scaleValue.value = basicValue + '%';
+var basicScaleValue = basicValue + '%';
+
+var increaseValue = function () {
+  var currentValue = parseInt(scaleValue.value, 10);
+  if (currentValue < maxValue) {
+    currentValue += stepValue;
+    if (currentValue > maxValue) {
+      currentValue = maxValue;
+    }
+  }
+  scaleValue.value = currentValue + '%';
+};
+
+
+var decreaseValue = function () {
+  var currentValue = parseInt(scaleValue.value, 10);
+  if (currentValue > minValue) {
+    currentValue -= stepValue;
+    if (currentValue < minValue) {
+      currentValue = minValue;
+    }
+  }
+  scaleValue.value = currentValue + '%';
+};
+
+var zoomImage = function () {
+  previewImage.style.transform = 'scale(' + parseInt(scaleValue.value, 10) / 100 + ')';
+};
+
+var onButtonClick = function (evt) {
+  if (evt.target === scaleSmaller) {
+    decreaseValue();
+    zoomImage();
+  } else if (evt.target === scaleBigger) {
+    increaseValue();
+    zoomImage();
+  }
+};
+
+scaleSmaller.addEventListener('click', onButtonClick);
+scaleBigger.addEventListener('click', onButtonClick);
+
+// 2.2 ==============================
+
+
+var effectsList = upload.querySelector('.effects__list');
+/*
+var effectNone = effectsList.querySelector('input[type="radio"][value="none"]');
+var effectChrome = effectsList.querySelector('input[type="radio"][value="chrome"]');
+var effectSepia = effectsList.querySelector('input[type="radio"][value="sepia"]');
+var effectMarvin = effectsList.querySelector('input[type="radio"][value="marvin"]');
+var effectPhobos = effectsList.querySelector('input[type="radio"][value="phobos"]');
+var effectHeat = effectsList.querySelector('input[type="radio"][value="heat"]');
+*/
+
+
+var applyEffect = function (effectValue) {
+  effectLevel.classList.remove('hidden');
+  previewImage.removeAttribute('class');
+  previewImage.style.filter = '';
+  previewImage.classList.add('effects__preview--' + effectValue);
+  if (effectValue === 'none') {
+    previewImage.removeAttribute('class');
+    effectLevel.classList.add('hidden');
+  }
+};
+
+var onRadioClick = function (evt) {
+  applyEffect(evt.target.value);
+};
+
+effectsList.addEventListener('click', onRadioClick);
+/*
+effectNone.addEventListener('click', onRadioClick);
+effectChrome.addEventListener('click', onRadioClick);
+effectSepia.addEventListener('click', onRadioClick);
+effectMarvin.addEventListener('click', onRadioClick);
+effectPhobos.addEventListener('click', onRadioClick);
+effectHeat.addEventListener('click', onRadioClick);
+*/
+// слайдер
+
+var currentRadio = function () {
+  var current = effectsList.querySelector('input:checked');
+  return current;
+};
+
+
+var effectLevel = upload.querySelector('.effect-level');
+// var effectLevelValue = effectLevel.querySelector('.effect-level__value');
+var slider = effectLevel.querySelector('.effect-level__line');
+var depth = effectLevel.querySelector('.effect-level__depth');
+var pin = effectLevel.querySelector('.effect-level__pin');
+
+var calculateChangeValue = function () {
+  var value = 0;
+  var pinCurrentLoc = pin.offsetLeft;
+  var sliderWidth = slider.offsetWidth;
+  // пропорция определения величины
+  value = (100 * pinCurrentLoc) / (sliderWidth);
+  // в итоге, функция должна вернуть значение изменения пина
+  return value;
+};
+
+var effectsStats = {
+  'chrome': {
+    currentEffect: 'grayscale',
+    convertedValue: 0.01,
+    bottomValue: 0,
+    topValue: 1,
+    unitsOfMeasure: ''
+  },
+  'sepia': {
+    currentEffect: 'sepia',
+    convertedValue: 0.01,
+    bottomValue: 0,
+    topValue: 1,
+    unitsOfMeasure: ''
+  },
+  'marvin': {
+    currentEffect: 'invert',
+    convertedValue: 1,
+    bottomValue: 0,
+    topValue: 100,
+    unitsOfMeasure: '%'
+  },
+  'phobos': {
+    currentEffect: 'blur',
+    convertedValue: 0.03,
+    bottomValue: 0,
+    topValue: 3,
+    unitsOfMeasure: 'px'
+  },
+  'heat': {
+    currentEffect: 'brightness',
+    convertedValue: 0.02,
+    bottomValue: 1,
+    topValue: 3,
+    unitsOfMeasure: ''
+  },
+  'none': {
+    currentEffect: '',
+    convertedValue: 0,
+    bottomValue: 0,
+    topValue: 0,
+    unitsOfMeasure: ''
+  }
+};
+
+var changeLevel = function (effect, effectValue) {
+  var currentEffect = '';
+  var changeValue = 0;
+  var convertedValue = 0;
+  var bottomValue = 0;
+  var topValue = 0;
+  var currentUnits = 0;
+
+  previewImage.style.filter = '';
+
+  currentEffect = effectsStats[effect].currentEffect;
+  convertedValue = effectsStats[effect].convertedValue;
+  bottomValue = effectsStats[effect].bottomValue;
+  topValue = effectsStats[effect].topValue;
+  currentUnits = effectsStats[effect].unitsOfMeasure;
+
+  changeValue = bottomValue + effectValue * convertedValue;
+
+  if (changeValue > topValue) {
+    changeValue = topValue;
+  }
+  if (changeValue < bottomValue) {
+    changeValue = bottomValue;
+  }
+
+  previewImage.style.filter = currentEffect + '(' + changeValue + currentUnits + ')';
+};
+
+
+var onPinMouseUp = function () {
+  changeLevel(currentRadio().value, calculateChangeValue());
+};
+
+pin.addEventListener('mouseup', onPinMouseUp);
+
+// закрытие формы редактирования загружаемого изображения
+var uploadCancel = upload.querySelector('.img-upload__cancel');
+
+var resetConditions = function () {
+  uploadControl.value = '';
+  scaleValue.value = basicScaleValue;
+  previewImage.style.transform = 'scale(1)';
+  previewImage.style.filter = '';
+  previewImage.removeAttribute('class');
+};
+
+var onCloseClick = function () {
+  close(uploadForm);
+  resetConditions();
+};
+
+uploadCancel.addEventListener('click', onCloseClick);
