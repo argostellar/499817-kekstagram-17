@@ -500,19 +500,25 @@ var KeyboardCode = {
   ENTER: 13
 };
 
+/*
+
 var modalValuesDict = {
   'uploadCancel': 'uploadForm'
-}
+};
 
-var openModal = function (evt) {
-  var target = evt.target;
-  open(modalValuesDict[target]);
+*/
+
+/*
+
+var openModal = function () {
+  open(uploadForm);
   document.addEventListener('keydown', onModalEscPress);
 };
 
-var closeModal = function (evt) {
-  var target = evt.target;
-  close(modalValuesDict[target]);
+*/
+
+var closeModal = function () {
+  close(uploadForm);
   document.removeEventListener('keydown', onModalEscPress);
 };
 
