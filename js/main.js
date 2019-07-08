@@ -264,11 +264,16 @@ var onUploadChange = function (evt) {
   }
 };
 
-var setDefaultConditions = function () {
-  // перемещение пина на максимальное значение
-  var maxPinPosition = slider.offsetWidth + 'px';
+var setPinDefaultPosition = function () {
+  var maxPinPosition = SliderStats.WIDTH + 'px';
   pin.style.left = maxPinPosition;
   depth.style.width = '100%';
+};
+
+var setDefaultConditions = function () {
+  // перемещение пина на максимальное значение
+  setPinDefaultPosition();
+  updateSliderStats();
   effectLevel.classList.add('hidden');
 };
 
@@ -336,14 +341,6 @@ scaleBigger.addEventListener('click', onButtonClick);
 
 
 var effectsList = upload.querySelector('.effects__list');
-/*
-var effectNone = effectsList.querySelector('input[type="radio"][value="none"]');
-var effectChrome = effectsList.querySelector('input[type="radio"][value="chrome"]');
-var effectSepia = effectsList.querySelector('input[type="radio"][value="sepia"]');
-var effectMarvin = effectsList.querySelector('input[type="radio"][value="marvin"]');
-var effectPhobos = effectsList.querySelector('input[type="radio"][value="phobos"]');
-var effectHeat = effectsList.querySelector('input[type="radio"][value="heat"]');
-*/
 
 
 var applyEffect = function (effectValue) {
@@ -355,6 +352,7 @@ var applyEffect = function (effectValue) {
     previewImage.removeAttribute('class');
     effectLevel.classList.add('hidden');
   }
+  setPinDefaultPosition();
 };
 
 var onRadioClick = function (evt) {
@@ -362,14 +360,7 @@ var onRadioClick = function (evt) {
 };
 
 effectsList.addEventListener('click', onRadioClick);
-/*
-effectNone.addEventListener('click', onRadioClick);
-effectChrome.addEventListener('click', onRadioClick);
-effectSepia.addEventListener('click', onRadioClick);
-effectMarvin.addEventListener('click', onRadioClick);
-effectPhobos.addEventListener('click', onRadioClick);
-effectHeat.addEventListener('click', onRadioClick);
-*/
+
 // слайдер
 
 var currentRadio = function () {
@@ -384,12 +375,31 @@ var slider = effectLevel.querySelector('.effect-level__line');
 var depth = effectLevel.querySelector('.effect-level__depth');
 var pin = effectLevel.querySelector('.effect-level__pin');
 
+var SliderStats = {
+  WIDTH: 0,
+  LEFT: 0,
+  RIGHT: 0
+};
+
+var getSliderStats = function () {
+  var stats = {};
+  stats.width = slider.offsetWidth;
+  stats.left = 0;
+  stats.right = slider.offsetWidth;
+  return stats;
+};
+
+var updateSliderStats = function () {
+  SliderStats.WIDTH = getSliderStats().width;
+  SliderStats.LEFT = getSliderStats().left;
+  SliderStats.RIGHT = getSliderStats().right;
+};
+
 var calculateChangeValue = function () {
   var value = 0;
   var pinCurrentLoc = pin.offsetLeft;
-  var sliderWidth = slider.offsetWidth;
   // пропорция определения величины
-  value = (100 * pinCurrentLoc) / (sliderWidth);
+  value = (100 * pinCurrentLoc) / (SliderStats.WIDTH);
   // в итоге, функция должна вернуть значение изменения пина
   return value;
 };
@@ -467,12 +477,42 @@ var changeLevel = function (effect, effectValue) {
   previewImage.style.filter = currentEffect + '(' + changeValue + currentUnits + ')';
 };
 
-
-var onPinMouseUp = function () {
-  changeLevel(currentRadio().value, calculateChangeValue());
+var Coordinate = function (x, y) {
+  this.x = x;
+  this.y = y;
 };
 
-pin.addEventListener('mouseup', onPinMouseUp);
+pin.addEventListener('mousedown', function (evt) {
+  var startCoords = new Coordinate(evt.clientX);
+  var onPinMouseMove = function (moveEvt) {
+    var changedCoords = new Coordinate(moveEvt.clientX);
+    var shift = {
+      x: startCoords.x - changedCoords.x
+    };
+    startCoords = new Coordinate(moveEvt.clientX);
+    var position = pin.offsetLeft - shift.x;
+    if (position > SliderStats.RIGHT) {
+      position = SliderStats.RIGHT;
+    }
+    if (position < SliderStats.LEFT) {
+      position = SliderStats.LEFT;
+    }
+    var positionPercent = (position / SliderStats.WIDTH) * 100;
+    pin.style.left = position + 'px';
+    depth.style.width = positionPercent + '%';
+    changeLevel(currentRadio().value, calculateChangeValue());
+  };
+  var onPinMouseUp = function () {
+    changeLevel(currentRadio().value, calculateChangeValue());
+    pin.removeEventListener('mouseleave', onPinMouseUp);
+    pin.removeEventListener('mousemove', onPinMouseMove);
+    pin.removeEventListener('mouseup', onPinMouseUp);
+  };
+  pin.addEventListener('mouseleave', onPinMouseUp);
+  pin.addEventListener('mousemove', onPinMouseMove);
+  pin.addEventListener('mouseup', onPinMouseUp);
+});
+
 
 // закрытие формы редактирования загружаемого изображения
 var uploadCancel = upload.querySelector('.img-upload__cancel');
@@ -483,6 +523,7 @@ var resetConditions = function () {
   previewImage.style.transform = 'scale(1)';
   previewImage.style.filter = '';
   previewImage.removeAttribute('class');
+  setPinDefaultPosition();
 };
 
 var onCloseClick = function () {
@@ -564,4 +605,6 @@ var onClosePressEsc = function () {
 };
 
 uploadCancel.addEventListener('keydown', onClosePressEsc);
+
+// 5.1 -------------------------------------
 
