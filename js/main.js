@@ -260,6 +260,7 @@ var onUploadChange = function (evt) {
   if (evt.value !== 0) {
     open(uploadForm);
     setDefaultConditions();
+    document.addEventListener('keydown', onModalEscPress);
   }
 };
 
@@ -490,3 +491,77 @@ var onCloseClick = function () {
 };
 
 uploadCancel.addEventListener('click', onCloseClick);
+
+// 4.2 ---------------------------------------------------------
+
+// перечисление кодов клавиатуры
+var KeyboardCode = {
+  ESC: 27,
+  ENTER: 13
+};
+
+/*
+
+var modalValuesDict = {
+  'uploadCancel': 'uploadForm'
+};
+
+*/
+
+/*
+
+var openModal = function () {
+  open(uploadForm);
+  document.addEventListener('keydown', onModalEscPress);
+};
+
+*/
+
+var closeModal = function () {
+  close(uploadForm);
+  document.removeEventListener('keydown', onModalEscPress);
+};
+
+var onModalEscPress = function (evt) {
+  if (evt.keyCode === KeyboardCode.ESC) {
+    closeModal();
+  }
+};
+
+// обработчик для закрытия окна на enter
+var onModalEnterPress = function (evt) {
+  if (evt.keyCode === KeyboardCode.ENTER) {
+    closeModal();
+  }
+};
+
+uploadCancel.addEventListener('keydown', onModalEscPress);
+uploadCancel.addEventListener('keydown', onModalEnterPress);
+
+
+var text = document.querySelector('.text');
+var commentTextField = text.querySelector('.text__description');
+
+var onFieldFocus = function (evt) {
+  if (evt.target === commentTextField) {
+    document.removeEventListener('keydown', onModalEscPress);
+  }
+};
+
+var onFieldBlur = function (evt) {
+  if (evt.target === commentTextField) {
+    document.addEventListener('keydown', onModalEscPress);
+  }
+};
+
+commentTextField.addEventListener('blur', onFieldBlur);
+commentTextField.addEventListener('focus', onFieldFocus);
+
+var onClosePressEsc = function () {
+  close(uploadForm);
+  resetConditions();
+  document.removeEventListener('keydown', onClosePressEsc);
+};
+
+uploadCancel.addEventListener('keydown', onClosePressEsc);
+
