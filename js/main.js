@@ -265,6 +265,7 @@ var onUploadChange = function (evt) {
 };
 
 var setPinDefaultPosition = function () {
+  updateSliderStats();
   var maxPinPosition = SliderStats.WIDTH + 'px';
   pin.style.left = maxPinPosition;
   depth.style.width = '100%';
@@ -273,7 +274,6 @@ var setPinDefaultPosition = function () {
 var setDefaultConditions = function () {
   // перемещение пина на максимальное значение
   setPinDefaultPosition();
-  updateSliderStats();
   effectLevel.classList.add('hidden');
 };
 
@@ -504,13 +504,11 @@ pin.addEventListener('mousedown', function (evt) {
   };
   var onPinMouseUp = function () {
     changeLevel(currentRadio().value, calculateChangeValue());
-    pin.removeEventListener('mouseleave', onPinMouseUp);
-    pin.removeEventListener('mousemove', onPinMouseMove);
-    pin.removeEventListener('mouseup', onPinMouseUp);
+    document.removeEventListener('mousemove', onPinMouseMove);
+    document.removeEventListener('mouseup', onPinMouseUp);
   };
-  pin.addEventListener('mouseleave', onPinMouseUp);
-  pin.addEventListener('mousemove', onPinMouseMove);
-  pin.addEventListener('mouseup', onPinMouseUp);
+  document.addEventListener('mousemove', onPinMouseMove);
+  document.addEventListener('mouseup', onPinMouseUp);
 });
 
 
