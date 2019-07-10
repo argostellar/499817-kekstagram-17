@@ -583,11 +583,8 @@ var commentTextField = text.querySelector('.text__description');
 
 var hashtag = text.querySelector('.text__hashtags');
 
-
-
 var onFieldFocus = function (evt) {
   if (evt.target === commentTextField || hashtag) {
-    console.log(evt);
     document.removeEventListener('keydown', onModalEscPress);
   }
 };
