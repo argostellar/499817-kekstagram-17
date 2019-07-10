@@ -583,6 +583,23 @@ var commentTextField = text.querySelector('.text__description');
 
 var hashtag = text.querySelector('.text__hashtags');
 
+
+
+var onFieldFocus = function (evt) {
+  if (evt.target === commentTextField || hashtag) {
+    console.log(evt);
+    document.removeEventListener('keydown', onModalEscPress);
+  }
+};
+
+// evt.tagName === textarea || input
+
+var onFieldBlur = function (evt) {
+  if (evt.target === commentTextField || hashtag) {
+    document.addEventListener('keydown', onModalEscPress);
+  }
+};
+
 commentTextField.addEventListener('blur', onFieldBlur);
 commentTextField.addEventListener('focus', onFieldFocus);
 

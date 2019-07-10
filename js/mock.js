@@ -1,5 +1,6 @@
 'use strict';
 
+// mock.js - создание мок-данных
 (function () {
 var MESSAGE_PARTS = [
   'Всё отлично!',

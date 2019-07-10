@@ -1,71 +1,88 @@
 'use strict';
 
-// задание 7 - подробности -----------------------------------------------------------
+// utility.js - универсальные утилитарные функции
 (function () {
-// фунция "снятия" класса hidden
-var open = function (hiddenBlock) {
-  hiddenBlock.classList.remove('hidden');
-};
+  window.utility = {
+    open: open(),
+    close: close(),
+    // Coordinate: Coordinate(),
+    closeModal: closeModal(),
+    onModalEscPress: onModalEscPress(),
+    onModalEnterPress: onModalEnterPress(),
+    onFieldFocus: onFieldFocus(),
+    onFieldBlur: onFieldBlur()
+  };
 
-var close = function (block) {
-  block.classList.add('hidden');
-};
+  // задание 7 - подробности -----------------------------------------------------------
+  // фунция "снятия" класса hidden
 
-var Coordinate = function (x, y) {
-  this.x = x;
-  this.y = y;
-};
+  var open = function (hiddenBlock) {
+    hiddenBlock.classList.remove('hidden');
+  };
 
+  var close = function (block) {
+    block.classList.add('hidden');
+  };
 
-/*
+  // как быть с конструктором? При импорте линтер ругается на заглавную букву
+  /*
+  var Coordinate = function (x, y) {
+    this.x = x;
+    this.y = y;
+  };
+  */
 
-var modalValuesDict = {
-  'uploadCancel': 'uploadForm'
-};
-
-*/
-
-/*
-
-var openModal = function () {
-  open(uploadForm);
-  document.addEventListener('keydown', onModalEscPress);
-};
-
-*/
-
-var closeModal = function () {
-  close(uploadForm);
-  document.removeEventListener('keydown', onModalEscPress);
-};
-
-var onModalEscPress = function (evt) {
-  if (evt.keyCode === KeyboardCode.ESC) {
-    closeModal();
-  }
-};
-
-// обработчик для закрытия окна на enter
-var onModalEnterPress = function (evt) {
-  if (evt.keyCode === KeyboardCode.ENTER) {
-    closeModal();
-  }
-};
-
-var onFieldFocus = function (evt) {
-  if (evt.target === commentTextField || hashtag) {
-    console.log(evt);
+  // также возникает пробема с передачей параметра функции
+  // раньше тут был uploadForm в close();
+  var closeModal = function (block) {
+    close(block);
     document.removeEventListener('keydown', onModalEscPress);
-  }
-};
+  };
 
-// можно ли сделать проверку на это условие?
-// evt.tagName === textarea || input
+  var onModalEscPress = function (evt) {
+    if (evt.keyCode === window.global.ESC) {
+      closeModal();
+    }
+  };
 
-var onFieldBlur = function (evt) {
-  if (evt.target === commentTextField || hashtag) {
+  // обработчик для закрытия окна на enter
+  var onModalEnterPress = function (evt) {
+    if (evt.keyCode === window.global.ENTER) {
+      closeModal();
+    }
+  };
+
+  var onFieldFocus = function (evt) {
+    if (evt.tagName === 'textarea' || 'input') {
+      document.removeEventListener('keydown', onModalEscPress);
+    }
+  };
+
+  // можно ли делать проверку на это условие?
+  // текущее условие: evt.tagName === textarea || input
+  // старое условие: evt.target === commentTextField || hashtag
+
+  var onFieldBlur = function (evt) {
+    if (evt.tagName === 'textarea' || 'input') {
+      document.addEventListener('keydown', onModalEscPress);
+    }
+  };
+
+  /*
+
+  var modalValuesDict = {
+    'uploadCancel': 'uploadForm'
+  };
+
+  */
+
+  /*
+
+  var openModal = function () {
+    open(uploadForm);
     document.addEventListener('keydown', onModalEscPress);
-  }
-};
+  };
+
+  */
 
 })();
