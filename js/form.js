@@ -12,7 +12,7 @@
     if (evt.value !== 0) {
       window.utility.open(uploadForm);
       setDefaultConditions();
-      document.addEventListener('keydown', window.utility.onModalEscPress);
+      document.addEventListener('keydown', onModalEscPress);
     }
   };
 
@@ -27,6 +27,36 @@
     // перемещение пина на максимальное значение
     setPinDefaultPosition();
     effectLevel.classList.add('hidden');
+  };
+
+  var closeModal = function () {
+    window.utility.close(uploadForm);
+    document.removeEventListener('keydown', onModalEscPress);
+  };
+
+  var onModalEscPress = function (evt) {
+    if (evt.keyCode === window.global.ESC) {
+      closeModal();
+    }
+  };
+
+  // обработчик для закрытия окна на enter
+  var onModalEnterPress = function (evt) {
+    if (evt.keyCode === window.global.ENTER) {
+      closeModal();
+    }
+  };
+
+  var onFieldFocus = function (evt) {
+    if (evt.target === commentTextField || evt.target === hashtag) {
+      document.removeEventListener('keydown', onModalEscPress);
+    }
+  };
+
+  var onFieldBlur = function (evt) {
+    if (evt.target === commentTextField || evt.target === hashtag) {
+      document.addEventListener('keydown', onModalEscPress);
+    }
   };
 
   uploadControl.addEventListener('change', onUploadChange);
@@ -121,6 +151,10 @@
     return current;
   };
 
+  var Coordinate = function (x, y) {
+    this.x = x;
+    this.y = y;
+  };
 
   var effectLevel = upload.querySelector('.effect-level');
   var slider = effectLevel.querySelector('.effect-level__line');
@@ -230,13 +264,13 @@
   };
 
   pin.addEventListener('mousedown', function (evt) {
-    var startCoords = new window.utility.Coordinate(evt.clientX);
+    var startCoords = new Coordinate(evt.clientX);
     var onPinMouseMove = function (moveEvt) {
-      var changedCoords = new window.utility.Coordinate(moveEvt.clientX);
+      var changedCoords = new Coordinate(moveEvt.clientX);
       var shift = {
         x: startCoords.x - changedCoords.x
       };
-      startCoords = new window.utility.Coordinate(moveEvt.clientX);
+      startCoords = new Coordinate(moveEvt.clientX);
       var position = pin.offsetLeft - shift.x;
       if (position > SliderStats.RIGHT) {
         position = SliderStats.RIGHT;
@@ -281,19 +315,19 @@
   // 4.2 ---------------------------------------------------------
 
 
-  uploadCancel.addEventListener('keydown', window.utility.onModalEscPress);
-  uploadCancel.addEventListener('keydown', window.utility.onModalEnterPress);
+  uploadCancel.addEventListener('keydown', onModalEscPress);
+  uploadCancel.addEventListener('keydown', onModalEnterPress);
 
 
   var text = document.querySelector('.text');
   var commentTextField = text.querySelector('.text__description');
   var hashtag = text.querySelector('.text__hashtags');
 
-  hashtag.addEventListener('blur', window.utility.onFieldBlur);
-  hashtag.addEventListener('focus', window.utility.onFieldFocus);
+  hashtag.addEventListener('blur', onFieldBlur);
+  hashtag.addEventListener('focus', onFieldFocus);
 
-  commentTextField.addEventListener('blur', window.utility.onFieldBlur);
-  commentTextField.addEventListener('focus', window.utility.onFieldFocus);
+  commentTextField.addEventListener('blur', onFieldBlur);
+  commentTextField.addEventListener('focus', onFieldFocus);
 
   var onClosePressEsc = function () {
     window.utility.close(uploadForm);
