@@ -192,7 +192,7 @@ var generatePhotoObjectsArray = function (photoAmount, commentsAmount, messageTe
   return photoArray;
 };
 
-// Реализация заполнения
+// Реализация заполнения -------------------------------------
 
 // куда будут добавлятся фото
 var picturesBlock = document.querySelector('.pictures');
@@ -581,20 +581,27 @@ uploadCancel.addEventListener('keydown', onModalEnterPress);
 var text = document.querySelector('.text');
 var commentTextField = text.querySelector('.text__description');
 
+var hashtag = text.querySelector('.text__hashtags');
+
 var onFieldFocus = function (evt) {
-  if (evt.target === commentTextField) {
+  if (evt.target === commentTextField || hashtag) {
     document.removeEventListener('keydown', onModalEscPress);
   }
 };
 
+// evt.tagName === textarea || input
+
 var onFieldBlur = function (evt) {
-  if (evt.target === commentTextField) {
+  if (evt.target === commentTextField || hashtag) {
     document.addEventListener('keydown', onModalEscPress);
   }
 };
 
 commentTextField.addEventListener('blur', onFieldBlur);
 commentTextField.addEventListener('focus', onFieldFocus);
+
+hashtag.addEventListener('blur', onFieldBlur);
+hashtag.addEventListener('focus', onFieldFocus);
 
 var onClosePressEsc = function () {
   close(uploadForm);
