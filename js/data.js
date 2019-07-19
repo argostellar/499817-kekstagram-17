@@ -7,7 +7,6 @@
   // серверное взаимодействие -------------------------------------
 
   var onLoadSuccess = function (photos) {
-    window.filter.check(photos);
     window.render(photos);
   };
 

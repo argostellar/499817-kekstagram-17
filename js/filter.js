@@ -29,7 +29,8 @@
     filterDiscussed.classList.remove('img-filters__button--active');
 
     window.clear();
-    window.render(currentPhotos);
+    // window.render(currentPhotos);
+    window.debounce(window.render(currentPhotos));
   };
   var getNewSorting = function () {
     // Новые — 10 случайных, не повторяющихся фотографий;
@@ -46,7 +47,8 @@
     filterDiscussed.classList.remove('img-filters__button--active');
 
     window.clear();
-    window.render(currentPhotos);
+    window.debounce(window.render(currentPhotos));
+    // window.render(currentPhotos);
     // window.debounce();
   };
   var getDiscussedSorting = function () {
@@ -65,7 +67,8 @@
     filterDiscussed.classList.add('img-filters__button--active');
 
     window.clear();
-    window.render(currentPhotos);
+    // window.render(currentPhotos);
+    window.debounce(window.render(currentPhotos));
   };
 
   var onClickSort = function (evt) {
