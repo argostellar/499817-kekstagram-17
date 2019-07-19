@@ -3,6 +3,9 @@
 // server.js - взаимодействие с сервером
 (function () {
   var GET_URL = 'https://js.dump.academy/kekstagram/data';
+
+  var imgFilter = document.querySelector('.img-filters');
+
   var load = function (onLoad, onError) {
 
     var xhr = new XMLHttpRequest();
@@ -29,11 +32,14 @@
 
     xhr.open('GET', GET_URL);
     xhr.send();
+
+    imgFilter.classList.remove('img-filters--inactive');
   };
 
   window.server = (function () {
     return {
-      load: load
+      load: load,
+      imgFilter: imgFilter
     };
   })();
 
