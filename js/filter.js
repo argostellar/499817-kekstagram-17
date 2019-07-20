@@ -27,10 +27,12 @@
     filterPopular.classList.add('img-filters__button--active');
     filterNew.classList.remove('img-filters__button--active');
     filterDiscussed.classList.remove('img-filters__button--active');
-
+    window.debounce();
     window.clear();
+    // window.debounce();
+    // window.debounce(window.render(currentPhotos));
     // window.render(currentPhotos);
-    window.debounce(window.render(currentPhotos));
+    window.render(currentPhotos);
   };
   var getNewSorting = function () {
     // Новые — 10 случайных, не повторяющихся фотографий;
@@ -38,18 +40,20 @@
       unsortedPhotos.slice().sort(function () {
         var leftScore = window.utility.getRandomNumber();
         var rightScore = window.utility.getRandomNumber();
-        window.utility.compareValues(leftScore, rightScore);
+        var compareValue = window.utility.compareValues(leftScore, rightScore);
+        return compareValue;
       })
       .splice(-(unsortedPhotos.length - OVERLIMIT_PHOTOS));
 
     filterPopular.classList.remove('img-filters__button--active');
     filterNew.classList.add('img-filters__button--active');
     filterDiscussed.classList.remove('img-filters__button--active');
-
+    window.debounce();
     window.clear();
-    window.debounce(window.render(currentPhotos));
-    // window.render(currentPhotos);
     // window.debounce();
+    // window.debounce(window.render(currentPhotos));
+    // window.render(currentPhotos);
+    window.render(currentPhotos);
   };
   var getDiscussedSorting = function () {
     // Обсуждаемые — фотографии, отсортированные
@@ -59,24 +63,27 @@
         // менять поведение, смотреть как работает .sort
         var leftScore = left.comments.length;
         var rightScore = right.comments.length;
-        window.utility.compareValues(leftScore, rightScore);
+        var compareValue = window.utility.compareValues(leftScore, rightScore);
+        return compareValue;
       });
 
     filterPopular.classList.remove('img-filters__button--active');
     filterNew.classList.remove('img-filters__button--active');
     filterDiscussed.classList.add('img-filters__button--active');
-
+    window.debounce();
     window.clear();
+    // window.debounce();
+    // window.debounce(window.render(currentPhotos));
     // window.render(currentPhotos);
-    window.debounce(window.render(currentPhotos));
+    window.render(currentPhotos);
   };
 
   var onClickSort = function (evt) {
-    if (evt.target === filterPopular) {
+    if (evt.target === filterPopular && window.global.isFilterReloadEnable) {
       getPopularSorting();
-    } else if (evt.target === filterNew) {
+    } else if (evt.target === filterNew && window.global.isFilterReloadEnable) {
       getNewSorting();
-    } else if (evt.target === filterDiscussed) {
+    } else if (evt.target === filterDiscussed && window.global.isFilterReloadEnable) {
       getDiscussedSorting();
     }
   };
