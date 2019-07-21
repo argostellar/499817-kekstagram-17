@@ -7,6 +7,8 @@
     ESC: 27,
     ENTER: 13
   };
+
+  var isFilterReloadEnable = true;
   // или сделать как в демке, не через объект, а отдельными переменными,
   // не свойствами объекта?
   // var ESC_KEYCODE = 27;
@@ -14,7 +16,8 @@
 
   window.global = {
     ESC: KeyboardCode.ESC,
-    ENTER: KeyboardCode.ENTER
+    ENTER: KeyboardCode.ENTER,
+    isFilterReloadEnable: isFilterReloadEnable
   };
 
 })();
