@@ -47,8 +47,8 @@
     // Новые — 10 случайных, не повторяющихся фотографий;
     currentPhotos =
       unsortedPhotos.slice().sort(function () {
-        var leftScore = window.utility.getRandomNumber();
-        var rightScore = window.utility.getRandomNumber();
+        var leftScore = window.utility.getRandomNumber(unsortedPhotos.length);
+        var rightScore = window.utility.getRandomNumber(unsortedPhotos.length);
         var compareValue = window.utility.compareValues(leftScore, rightScore);
         return compareValue;
       })
