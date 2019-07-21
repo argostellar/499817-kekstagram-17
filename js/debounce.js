@@ -1,7 +1,7 @@
 'use strict';
 
 // debounce.js - модуль устранения "дребезга"
-
+/*
 (function () {
   var DEBOUNCE_INTERVAL = 500; // ms
 
@@ -12,7 +12,7 @@
     }, DEBOUNCE_INTERVAL);
   };
 })();
-
+*/
 /*
 (function () {
   var DEBOUNCE_INTERVAL = 300; // ms
@@ -27,7 +27,7 @@
 })();
 */
 
-/*
+
 (function () {
   var DEBOUNCE_INTERVAL = 300; // ms
 
@@ -46,4 +46,4 @@
     };
   };
 })();
-*/
+

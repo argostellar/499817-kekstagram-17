@@ -20,6 +20,14 @@
   var OVERLIMIT_PHOTOS = 15;
   var currentPhotos = [];
 
+  var getSortingDebounce = function () {
+    (window.debounce(renderPhotos))();
+  };
+
+  var renderPhotos = function () {
+    window.render(currentPhotos);
+  };
+
   var getPopularSorting = function () {
     // Популярные — фотографии в изначальном порядке;
     currentPhotos = unsortedPhotos;
@@ -27,12 +35,13 @@
     filterPopular.classList.add('img-filters__button--active');
     filterNew.classList.remove('img-filters__button--active');
     filterDiscussed.classList.remove('img-filters__button--active');
-    window.debounce();
+    // window.debounce();
     window.clear();
     // window.debounce();
     // window.debounce(window.render(currentPhotos));
     // window.render(currentPhotos);
-    window.render(currentPhotos);
+    // window.render(currentPhotos);
+    getSortingDebounce();
   };
   var getNewSorting = function () {
     // Новые — 10 случайных, не повторяющихся фотографий;
@@ -48,12 +57,13 @@
     filterPopular.classList.remove('img-filters__button--active');
     filterNew.classList.add('img-filters__button--active');
     filterDiscussed.classList.remove('img-filters__button--active');
-    window.debounce();
+    // window.debounce();
     window.clear();
     // window.debounce();
     // window.debounce(window.render(currentPhotos));
     // window.render(currentPhotos);
-    window.render(currentPhotos);
+    // window.render(currentPhotos);
+    getSortingDebounce();
   };
   var getDiscussedSorting = function () {
     // Обсуждаемые — фотографии, отсортированные
@@ -70,12 +80,13 @@
     filterPopular.classList.remove('img-filters__button--active');
     filterNew.classList.remove('img-filters__button--active');
     filterDiscussed.classList.add('img-filters__button--active');
-    window.debounce();
+    // window.debounce();
     window.clear();
     // window.debounce();
     // window.debounce(window.render(currentPhotos));
     // window.render(currentPhotos);
-    window.render(currentPhotos);
+    // window.render(currentPhotos);
+    getSortingDebounce();
   };
 
   var onClickSort = function (evt) {
