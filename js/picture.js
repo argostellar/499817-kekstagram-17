@@ -3,7 +3,8 @@
 // picture.js - модуль для отрисовки миниатюры в полноформатное изображение;
 (function () {
   var picture = document.querySelector('.big-picture');
-  var image = picture.querySelector('.big-picture__img');
+  var imageWrap = picture.querySelector('.big-picture__img');
+  var image = imageWrap.querySelector('img');
   var likesCount = picture.querySelector('.likes-count');
   var commentsCount = picture.querySelector('.comments-count');
   var commentsLoader = picture.querySelector('.comments-loader');
