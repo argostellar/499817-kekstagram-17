@@ -18,8 +18,11 @@
     return array[randomElementIndex];
   };
 
-  var getRandomNumber = function () {
-    var randomNumber = Math.floor(Math.random() * 25);
+  var getRandomNumber = function (range, isNoZero) {
+    var randomNumber = Math.floor(Math.random() * range);
+    if (isNoZero) {
+      randomNumber = Math.floor(Math.random() * (range - 1) + 1);
+    }
     return randomNumber;
   };
 

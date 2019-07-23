@@ -1,6 +1,6 @@
 'use strict';
 
-// render.js - отрисовка фотографий
+// render.js - отрисовка миниатюр фотографий на странице
 (function () {
 
   // Реализация заполнения -------------------------------------
@@ -15,13 +15,26 @@
   var fragment = document.createDocumentFragment();
 
   // Создание элементов
+  var getUrlNumber = function (string) {
+    var urlNumber = 0;
+    // var part = new RegExp('photos/(\d).jpg');
+    var firstPart = new RegExp('photos/');
+    var secondPart = new RegExp('.jpg');
+    var intermediateOne = string.split(firstPart);
+    var intermediateTwo = intermediateOne[1].split(secondPart);
+    urlNumber = parseInt(intermediateTwo, 10);
+    return urlNumber;
+  };
 
   var createPhoto = function (photoObject) {
 
     var pictureElement = pictureTemplate.cloneNode(true);
 
+    var digit = getUrlNumber(photoObject.url);
     var url = pictureElement.querySelector('img');
     url.src = photoObject.url;
+    // url.dataNumber = digit;
+    url.setAttribute('data-number', digit);
 
     var likes = pictureElement.querySelector('.picture__likes');
     likes.textContent = photoObject.likes;

@@ -47,8 +47,8 @@
     // Новые — 10 случайных, не повторяющихся фотографий;
     currentPhotos =
       unsortedPhotos.slice().sort(function () {
-        var leftScore = window.utility.getRandomNumber();
-        var rightScore = window.utility.getRandomNumber();
+        var leftScore = window.utility.getRandomNumber(unsortedPhotos.length);
+        var rightScore = window.utility.getRandomNumber(unsortedPhotos.length);
         var compareValue = window.utility.compareValues(leftScore, rightScore);
         return compareValue;
       })
@@ -90,11 +90,11 @@
   };
 
   var onClickSort = function (evt) {
-    if (evt.target === filterPopular && window.global.isFilterReloadEnable) {
+    if (evt.target === filterPopular) {
       getPopularSorting();
-    } else if (evt.target === filterNew && window.global.isFilterReloadEnable) {
+    } else if (evt.target === filterNew) {
       getNewSorting();
-    } else if (evt.target === filterDiscussed && window.global.isFilterReloadEnable) {
+    } else if (evt.target === filterDiscussed) {
       getDiscussedSorting();
     }
   };
