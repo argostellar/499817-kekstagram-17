@@ -90,11 +90,11 @@
   };
 
   var onClickSort = function (evt) {
-    if (evt.target === filterPopular && window.global.isFilterReloadEnable) {
+    if (evt.target === filterPopular) {
       getPopularSorting();
-    } else if (evt.target === filterNew && window.global.isFilterReloadEnable) {
+    } else if (evt.target === filterNew) {
       getNewSorting();
-    } else if (evt.target === filterDiscussed && window.global.isFilterReloadEnable) {
+    } else if (evt.target === filterDiscussed) {
       getDiscussedSorting();
     }
   };

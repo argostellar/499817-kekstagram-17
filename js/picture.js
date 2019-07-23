@@ -2,12 +2,24 @@
 
 // picture.js - модуль для отрисовки миниатюры в полноформатное изображение;
 (function () {
+  var photosArray = [];
+  var onLoadSuccess = function (photos) {
+    photosArray = photos.slice();
+  };
+
+  var onLoadError = function (errorMessage) {
+    window.utility.createMessage('red', errorMessage);
+  };
+
+  window.server.load(onLoadSuccess, onLoadError);
+
   var picture = document.querySelector('.big-picture');
   var imageWrap = picture.querySelector('.big-picture__img');
   var image = imageWrap.querySelector('img');
   var likesCount = picture.querySelector('.likes-count');
   var commentsCount = picture.querySelector('.comments-count');
   var commentsLoader = picture.querySelector('.comments-loader');
+  var closeButton = picture.querySelector('.big-picture__cancel');
 
   var social = picture.querySelector('.social');
   var commentsField = social.querySelector('.social__comments');
@@ -47,7 +59,6 @@
     commentsArray.forEach(function (comment) {
       comment.remove();
     });
-    // commentsField.removeChild();
   };
 
   var openPicture = function (photo) {
@@ -63,5 +74,36 @@
     });
     description.textContent = photo.description;
   };
+
+  var getPhotoData = function (evt) {
+    var element = evt.target;
+    var attribute = element.getAttribute('data-number');
+    var attributeNumber = parseInt(attribute, 10);
+    var numberIndex = attributeNumber - 1;
+    var currentObject = photosArray[numberIndex];
+    return currentObject;
+  };
+
+  var onPictureOpen = function (evt) {
+    if (evt.target.className === 'picture__img') {
+      openPicture(getPhotoData(evt));
+      document.addEventListener('keydown', onCloseEscPress);
+    }
+  };
+
+  var onCloseClick = function () {
+    window.utility.close(picture);
+  };
+
+  var onCloseEscPress = function (evt) {
+    if (evt.keyCode === window.global.ESC) {
+      window.utility.close(picture);
+      document.removeEventListener('keydown', onCloseEscPress);
+    }
+  };
+
+  document.addEventListener('click', onPictureOpen);
+  closeButton.addEventListener('click', onCloseClick);
+
   window.picture = openPicture;
 })();
