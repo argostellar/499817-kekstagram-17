@@ -361,8 +361,8 @@
       }
       // console.log('Это удалённые: ' + removed);
     }
-    console.log(indexArray);
-    console.log('Текущий момент: ' + currentArray);
+    // console.log(indexArray);
+    // console.log('Текущий момент: ' + currentArray);
     return currentArray;
   };
 
@@ -375,8 +375,8 @@
       return newItem;
     });
     var clearArray = removeEmptyElement(copiedArray);
-    console.log('This is valuesArray: ' + valuesArray);
-    console.log(copiedArray);
+    // console.log('This is valuesArray: ' + valuesArray);
+    // console.log(copiedArray);
     /*
     valuesArray.forEach(function (value) {
       checkHashtag(value);
@@ -395,7 +395,7 @@
         }
         return false;
       });
-      console.log(check);
+      // console.log(check);
       if (check === true) {
         error = validationDict['no repeat'];
       }
@@ -422,14 +422,14 @@
   };
 
   var checkHashtag = function (hashtagItems) {
-    var validationError = undefined;
+    var validationError = null;
     var errorArray = [];
     errorArray[0] = checkAmount(hashtagItems, validationError);
     errorArray[1] = checkLength(hashtagItems, validationError);
     errorArray[2] = checkEqual(hashtagItems, validationError);
-    console.log(errorArray);
+    // console.log(errorArray);
     var errorMessage = errorArray.join('');
-    console.log(errorMessage);
+    // console.log(errorMessage);
     hashtag.setCustomValidity(errorMessage);
   };
 
