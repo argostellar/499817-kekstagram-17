@@ -24,7 +24,7 @@
    'Один и тот же хэш-тег не может быть использован дважды. \n' +
    'Нельзя указывать больше пяти хэш-тегов. \n' +
    'Максимальная длина одного хэш-тега 20 символов, включая решётку. \n' +
-   'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. '
+   'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. ';
 
   var sortEmptyElements = function (element) {
     var identifier = 0;
@@ -66,67 +66,39 @@
     var inputValue = hashtag.value;
     // Приводим значение строки к нижнему регистру
     inputValue = inputValue.toLowerCase();
-    console.log(inputValue);
+    // console.log(inputValue);
     // Заводим "разделитель" в виде пробела (или любого количества пробелов)
     var separator = new RegExp('[ ]+');
     var valuesArray = inputValue.split(separator);
     var clearArray = removeEmptyElement(valuesArray);
-    console.log(valuesArray);
-    console.log('This is valuesArray: ' + valuesArray);
-    console.log(clearArray);
-    checkHashtag(clearArray);
+    // console.log(valuesArray);
+    // console.log('This is valuesArray: ' + valuesArray);
+    // console.log(clearArray);
+    var errorMessage = checkEqual(clearArray);
+    hashtag.setCustomValidity(errorMessage);
 
   };
 
   // Проверка на наличие одинаковых хэш-тегов: не работает
-  var checkEqual = function (array, error) {
+  var checkEqual = function (array) {
+    var error = '';
+    var testArray = array.slice();
+    // console.log(array);
     for (var i = 0; i < array.length; i++) {
-      var check = array.find(function (arrayItem) {
-        var right = array[i + 1];
-        var left = array[i - 1];
-        if (right === arrayItem && left === arrayItem) {
-          return true;
-        }
-        return false;
-      });
-      // console.log(check);
-      if (check === true) {
+      // console.log('Начало проверки. Текущий индекс: ' + i);
+      var value = array[i];
+      /* var removed = */
+      testArray.splice(0, 1);
+      // console.log('REMOVED: ' + removed);
+      // console.log('THIS IS VALUE: ' + value);
+      // console.log('Это тест: ' + testArray);
+      if (testArray.includes(value)) {
         error = validationDict['no repeat'];
-      }
+        // console.log('RED ALERT!!!');
+      } /* else {console.log('CHECKED')} */
     }
+    // console.log('ERROR: ' + error);
     return error;
-  };
-
-  // Проверка количества хэш-тегов: работает
-  var checkAmount = function (array, error) {
-    if (array.length > 5) {
-      error = validationDict['too many hashtags'];
-      return error;
-    }
-    return error;
-  };
-
-  // Проверка длинны хэш-тега: работает
-  var checkLength = function (array, error) {
-    array.forEach(function (arrayItem) {
-      if (arrayItem.length > 20) {
-        error = validationDict['too long'];
-      }
-      return error;
-    });
-    return error;
-  };
-
-  var checkHashtag = function (hashtagItems) {
-    var validationError = null;
-    var errorArray = [];
-    errorArray[0] = checkAmount(hashtagItems, validationError);
-    errorArray[1] = checkLength(hashtagItems, validationError);
-    errorArray[2] = checkEqual(hashtagItems, validationError);
-    // console.log(errorArray);
-    var errorMessage = errorArray.join('');
-    // console.log(errorMessage);
-    hashtag.setCustomValidity(errorMessage);
   };
 
   var onSubmitValidate = function () {
@@ -134,7 +106,8 @@
     validateHashtags();
   };
 
-  var onHashtagValidate = function (evt) {
+  var onHashtagValidate = function () {
+    // validateHashtags();
     hashtag.setCustomValidity(validationRules);
   };
 
