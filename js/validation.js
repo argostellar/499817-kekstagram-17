@@ -18,7 +18,13 @@
     'register free': 'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. '
   };
 
-  var validationRules = 'Хэш-тег начинается с символа # (решётка).\n Хеш-тег не может состоять только из одной решётки. \nХэш-теги разделяются пробелами. \nОдин и тот же хэш-тег не может быть использован дважды. \nНельзя указывать больше пяти хэш-тегов. \nМаксимальная длина одного хэш-тега 20 символов, включая решётку. \nТеги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. '
+  var validationRules = 'Хэш-тег начинается с символа # (решётка).\n' +
+   'Хеш-тег не может состоять только из одной решётки. \n' +
+   'Хэш-теги разделяются пробелами. \n' +
+   'Один и тот же хэш-тег не может быть использован дважды. \n' +
+   'Нельзя указывать больше пяти хэш-тегов. \n' +
+   'Максимальная длина одного хэш-тега 20 символов, включая решётку. \n' +
+   'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. '
 
   var sortEmptyElements = function (element) {
     var identifier = 0;
@@ -45,33 +51,8 @@
         currentArray.splice(indexArray[j], 1);
 
       }
-      // console.log('Это удалённые: ' + removed);
     }
-    // console.log(indexArray);
-    // console.log('Текущий момент: ' + currentArray);
     return currentArray;
-  };
-
-  var checkSpacing = function (string, separator) {
-    var spaceSeparator = new RegExp(' ');
-    var array = string.split(spaceSeparator);
-    var newString = array.join('');
-    console.log(array);
-    console.log(newString);
-    return newString;
-  };
-
-  var checkSharp = function (string, separator) {
-    var sharpSeparator = new RegExp('#');
-    var array = string.split(sharpSeparator);
-    array = removeEmptyElement(array);
-    console.log(array);
-    return array;
-  };
-
-  var checkContent = function (string, separator) {
-    var contentSeparator = new RegExp('#(/a)');
-    var newArray = string.split(contentSeparator)
   };
 
   /*
@@ -80,30 +61,19 @@
   };
   */
 
-  var checks = function (string) {
-    var currentString = string;
-    var spacelessString = checkSpacing(currentString);
-    var sharplessString = checkSharp(spacelessString);
-    console.log('Текущая строка: ' + sharplessString);
-  };
-
   var validateHashtags = function () {
     // Получаем значение формы в виде строки
     var inputValue = hashtag.value;
     // Приводим значение строки к нижнему регистру
     inputValue = inputValue.toLowerCase();
-    // Заводим "разделитель" в виде пробела
-    // checks(inputValue);
-    var separator = new RegExp(' ');
+    console.log(inputValue);
+    // Заводим "разделитель" в виде пробела (или любого количества пробелов)
+    var separator = new RegExp('[ ]+');
     var valuesArray = inputValue.split(separator);
     var clearArray = removeEmptyElement(valuesArray);
-    // console.log('This is valuesArray: ' + valuesArray);
-    // console.log(copiedArray);
-    /*
-    valuesArray.forEach(function (value) {
-      checkHashtag(value);
-    });
-    */
+    console.log(valuesArray);
+    console.log('This is valuesArray: ' + valuesArray);
+    console.log(clearArray);
     checkHashtag(clearArray);
 
   };
