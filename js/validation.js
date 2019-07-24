@@ -18,6 +18,8 @@
     'register free': 'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. '
   };
 
+  var validationRules = 'Хэш-тег начинается с символа # (решётка).\n Хеш-тег не может состоять только из одной решётки. \nХэш-теги разделяются пробелами. \nОдин и тот же хэш-тег не может быть использован дважды. \nНельзя указывать больше пяти хэш-тегов. \nМаксимальная длина одного хэш-тега 20 символов, включая решётку. \nТеги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. '
+
   var sortEmptyElements = function (element) {
     var identifier = 0;
     if (element === '') {
@@ -50,15 +52,51 @@
     return currentArray;
   };
 
+  var checkSpacing = function (string, separator) {
+    var spaceSeparator = new RegExp(' ');
+    var array = string.split(spaceSeparator);
+    var newString = array.join('');
+    console.log(array);
+    console.log(newString);
+    return newString;
+  };
+
+  var checkSharp = function (string, separator) {
+    var sharpSeparator = new RegExp('#');
+    var array = string.split(sharpSeparator);
+    array = removeEmptyElement(array);
+    console.log(array);
+    return array;
+  };
+
+  var checkContent = function (string, separator) {
+    var contentSeparator = new RegExp('#(/a)');
+    var newArray = string.split(contentSeparator)
+  };
+
+  /*
+  var checkUniversal = function (string, separator) {
+    var array = string.split(separator);
+  };
+  */
+
+  var checks = function (string) {
+    var currentString = string;
+    var spacelessString = checkSpacing(currentString);
+    var sharplessString = checkSharp(spacelessString);
+    console.log('Текущая строка: ' + sharplessString);
+  };
+
   var validateHashtags = function () {
+    // Получаем значение формы в виде строки
     var inputValue = hashtag.value;
+    // Приводим значение строки к нижнему регистру
+    inputValue = inputValue.toLowerCase();
+    // Заводим "разделитель" в виде пробела
+    // checks(inputValue);
     var separator = new RegExp(' ');
     var valuesArray = inputValue.split(separator);
-    var copiedArray = valuesArray.map(function (item) {
-      var newItem = item.toLowerCase();
-      return newItem;
-    });
-    var clearArray = removeEmptyElement(copiedArray);
+    var clearArray = removeEmptyElement(valuesArray);
     // console.log('This is valuesArray: ' + valuesArray);
     // console.log(copiedArray);
     /*
@@ -70,6 +108,7 @@
 
   };
 
+  // Проверка на наличие одинаковых хэш-тегов: не работает
   var checkEqual = function (array, error) {
     for (var i = 0; i < array.length; i++) {
       var check = array.find(function (arrayItem) {
@@ -88,6 +127,7 @@
     return error;
   };
 
+  // Проверка количества хэш-тегов: работает
   var checkAmount = function (array, error) {
     if (array.length > 5) {
       error = validationDict['too many hashtags'];
@@ -96,6 +136,7 @@
     return error;
   };
 
+  // Проверка длинны хэш-тега: работает
   var checkLength = function (array, error) {
     array.forEach(function (arrayItem) {
       if (arrayItem.length > 20) {
@@ -123,6 +164,11 @@
     validateHashtags();
   };
 
+  var onHashtagValidate = function (evt) {
+    hashtag.setCustomValidity(validationRules);
+  };
+
   submit.addEventListener('click', onSubmitValidate);
+  hashtag.addEventListener('invalid', onHashtagValidate);
 
 })();
