@@ -49,55 +49,32 @@
       }
       for (var j = 0; j < indexArray.length; j++) {
         currentArray.splice(indexArray[j], 1);
-
       }
     }
     return currentArray;
   };
 
-  /*
-  var checkUniversal = function (string, separator) {
-    var array = string.split(separator);
-  };
-  */
-
   var validateHashtags = function () {
-    // Получаем значение формы в виде строки
     var inputValue = hashtag.value;
-    // Приводим значение строки к нижнему регистру
     inputValue = inputValue.toLowerCase();
-    // console.log(inputValue);
-    // Заводим "разделитель" в виде пробела (или любого количества пробелов)
     var separator = new RegExp('[ ]+');
     var valuesArray = inputValue.split(separator);
     var clearArray = removeEmptyElement(valuesArray);
-    // console.log(valuesArray);
-    // console.log('This is valuesArray: ' + valuesArray);
-    // console.log(clearArray);
     var errorMessage = checkEqual(clearArray);
     hashtag.setCustomValidity(errorMessage);
-
   };
 
-  // Проверка на наличие одинаковых хэш-тегов: не работает
+  // Проверка на наличие одинаковых хэш-тегов: работает
   var checkEqual = function (array) {
     var error = '';
     var testArray = array.slice();
-    // console.log(array);
     for (var i = 0; i < array.length; i++) {
-      // console.log('Начало проверки. Текущий индекс: ' + i);
       var value = array[i];
-      /* var removed = */
       testArray.splice(0, 1);
-      // console.log('REMOVED: ' + removed);
-      // console.log('THIS IS VALUE: ' + value);
-      // console.log('Это тест: ' + testArray);
       if (testArray.includes(value)) {
         error = validationDict['no repeat'];
-        // console.log('RED ALERT!!!');
-      } /* else {console.log('CHECKED')} */
+      }
     }
-    // console.log('ERROR: ' + error);
     return error;
   };
 
