@@ -318,7 +318,6 @@
   uploadCancel.addEventListener('keydown', onModalEscPress);
   uploadCancel.addEventListener('keydown', onModalEnterPress);
 
-
   var text = document.querySelector('.text');
   var commentTextField = text.querySelector('.text__description');
   var hashtag = text.querySelector('.text__hashtags');

@@ -8,7 +8,6 @@
 
   var onLoadSuccess = function (photos) {
     window.render(photos);
-    window.picture(photos[0]);
   };
 
   var onLoadError = function (errorMessage) {
