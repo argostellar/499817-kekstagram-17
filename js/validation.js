@@ -4,7 +4,7 @@
 (function () {
   var upload = document.querySelector('.img-upload');
   var text = document.querySelector('.text');
-  // var commentTextField = text.querySelector('.text__description');
+  var commentTextField = text.querySelector('.text__description');
   var hashtag = text.querySelector('.text__hashtags');
   var submit = upload.querySelector('.img-upload__submit');
 
@@ -25,6 +25,8 @@
    'Нельзя указывать больше пяти хэш-тегов. \n' +
    'Максимальная длина одного хэш-тега 20 символов, включая решётку. \n' +
    'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. ';
+
+   var commentValidity = 'Комментарий не может быть больше 140 символов. ';
 
   var sortEmptyElements = function (element) {
     var identifier = 0;
@@ -88,6 +90,11 @@
     hashtag.setCustomValidity(validationRules);
   };
 
+  var onCommentValidate = function () {
+    commentTextField.setCustomValidity(commentValidity);
+  };
+
+  commentTextField.addEventListener('invalid', onCommentValidate);
   submit.addEventListener('click', onSubmitValidate);
   hashtag.addEventListener('invalid', onHashtagValidate);
 
