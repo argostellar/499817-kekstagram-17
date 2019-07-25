@@ -18,6 +18,14 @@
     'register free': 'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. '
   };
 
+  var validationRules = 'Хэш-тег начинается с символа # (решётка).\n' +
+   'Хеш-тег не может состоять только из одной решётки. \n' +
+   'Хэш-теги разделяются пробелами. \n' +
+   'Один и тот же хэш-тег не может быть использован дважды. \n' +
+   'Нельзя указывать больше пяти хэш-тегов. \n' +
+   'Максимальная длина одного хэш-тега 20 символов, включая решётку. \n' +
+   'Теги нечувствительны к регистру: #ХэшТег и #хэштег считаются одним и тем же тегом. ';
+
   var sortEmptyElements = function (element) {
     var identifier = 0;
     if (element === '') {
@@ -41,81 +49,33 @@
       }
       for (var j = 0; j < indexArray.length; j++) {
         currentArray.splice(indexArray[j], 1);
-
       }
-      // console.log('Это удалённые: ' + removed);
     }
-    // console.log(indexArray);
-    // console.log('Текущий момент: ' + currentArray);
     return currentArray;
   };
 
   var validateHashtags = function () {
     var inputValue = hashtag.value;
-    var separator = new RegExp(' ');
+    inputValue = inputValue.toLowerCase();
+    var separator = new RegExp('[ ]+');
     var valuesArray = inputValue.split(separator);
-    var copiedArray = valuesArray.map(function (item) {
-      var newItem = item.toLowerCase();
-      return newItem;
-    });
-    var clearArray = removeEmptyElement(copiedArray);
-    // console.log('This is valuesArray: ' + valuesArray);
-    // console.log(copiedArray);
-    /*
-    valuesArray.forEach(function (value) {
-      checkHashtag(value);
-    });
-    */
-    checkHashtag(clearArray);
-
+    var clearArray = removeEmptyElement(valuesArray);
+    var errorMessage = checkEqual(clearArray);
+    hashtag.setCustomValidity(errorMessage);
   };
 
-  var checkEqual = function (array, error) {
+  // Проверка на наличие одинаковых хэш-тегов: работает
+  var checkEqual = function (array) {
+    var error = '';
+    var testArray = array.slice();
     for (var i = 0; i < array.length; i++) {
-      var check = array.find(function (arrayItem) {
-        var right = array[i + 1];
-        var left = array[i - 1];
-        if (right === arrayItem && left === arrayItem) {
-          return true;
-        }
-        return false;
-      });
-      // console.log(check);
-      if (check === true) {
+      var value = array[i];
+      testArray.splice(0, 1);
+      if (testArray.includes(value)) {
         error = validationDict['no repeat'];
       }
     }
     return error;
-  };
-
-  var checkAmount = function (array, error) {
-    if (array.length > 5) {
-      error = validationDict['too many hashtags'];
-      return error;
-    }
-    return error;
-  };
-
-  var checkLength = function (array, error) {
-    array.forEach(function (arrayItem) {
-      if (arrayItem.length > 20) {
-        error = validationDict['too long'];
-      }
-      return error;
-    });
-    return error;
-  };
-
-  var checkHashtag = function (hashtagItems) {
-    var validationError = null;
-    var errorArray = [];
-    errorArray[0] = checkAmount(hashtagItems, validationError);
-    errorArray[1] = checkLength(hashtagItems, validationError);
-    errorArray[2] = checkEqual(hashtagItems, validationError);
-    // console.log(errorArray);
-    var errorMessage = errorArray.join('');
-    // console.log(errorMessage);
-    hashtag.setCustomValidity(errorMessage);
   };
 
   var onSubmitValidate = function () {
@@ -123,6 +83,13 @@
     validateHashtags();
   };
 
+  var onHashtagValidate = function () {
+    // validateHashtags();
+    hashtag.setCustomValidity(validationRules);
+  };
+
   submit.addEventListener('click', onSubmitValidate);
+  hashtag.addEventListener('invalid', onHashtagValidate);
 
 })();
+
