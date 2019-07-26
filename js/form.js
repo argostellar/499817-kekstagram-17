@@ -80,6 +80,4 @@
   };
 
   uploadCancel.addEventListener('keydown', onClosePressEsc);
-
-
 })();
