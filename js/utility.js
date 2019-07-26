@@ -37,7 +37,7 @@
     }
     return currentValue;
   };
-
+/*
   var createMessage = function (message) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; outline: 2px solid white; text-align: center; background-color: rbga(255, 0, 0, 0.8);';
@@ -53,13 +53,13 @@
       node.classList.add('hidden');
     });
   };
-
+*/
   window.utility = {
     open: open,
     close: close,
     getRandomElement: getRandomElement,
     getRandomNumber: getRandomNumber,
-    createMessage: createMessage,
+    // createMessage: createMessage,
     compareValues: compareValues
   };
 

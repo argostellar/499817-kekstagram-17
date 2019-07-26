@@ -336,6 +336,8 @@
 
   uploadCancel.addEventListener('keydown', onClosePressEsc);
 
+  var uploadFormItem = upload.querySelector('.img-upload__form');
+
   var successTemplate = document.querySelector('#success');
   var errorTemplate = document.querySelector('#error');
   var main = document.querySelector('main');
@@ -390,9 +392,10 @@
   var onFormSubmissionSend = function (evt) {
     evt.preventDefault();
     window.utility.close(uploadForm);
-    window.server.save(new FormData(uploadForm), onLoadSuccess, onLoadError);
+    window.server.save(new FormData(uploadFormItem), onLoadSuccess, onLoadError);
+    return false;
   };
 
-  uploadForm.addEventListener('submit', onFormSubmissionSend);
+  uploadFormItem.addEventListener('submit', onFormSubmissionSend);
 
 })();
