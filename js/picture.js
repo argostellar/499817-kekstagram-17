@@ -8,7 +8,7 @@
   };
 
   var onLoadError = function (errorMessage) {
-    window.utility.createMessage('red', errorMessage);
+    window.utility.createMessage(errorMessage, 'red');
   };
 
   window.server.load(onLoadSuccess, onLoadError);

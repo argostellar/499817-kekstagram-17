@@ -7,7 +7,7 @@
   var uploadCancel = window.form.upload.querySelector('.img-upload__cancel');
 
   var onUploadChange = function (evt) {
-    if (evt.value !== 0) {
+    if (evt.value !== '') {
       window.utility.open(uploadForm);
       window.slider.setDefaultConditions();
       document.addEventListener('keydown', onModalEscPress);
@@ -16,6 +16,10 @@
 
   var closeModal = function () {
     window.utility.close(uploadForm);
+    uploadControl.value = '';
+    window.slider.resetRadio();
+    window.slider.resetConditions();
+    window.slider.setDefaultConditions();
     document.removeEventListener('keydown', onModalEscPress);
   };
 
@@ -53,6 +57,7 @@
   var onCloseClick = function () {
     window.utility.close(uploadForm);
     window.slider.resetConditions();
+    window.slider.resetRadio();
   };
 
   uploadCancel.addEventListener('click', onCloseClick);
@@ -76,6 +81,7 @@
   var onClosePressEsc = function () {
     window.utility.close(uploadForm);
     window.slider.resetConditions();
+    window.slider.resetRadio();
     document.removeEventListener('keydown', onClosePressEsc);
   };
 

@@ -16,9 +16,8 @@
     return message;
   };
 
-  var uploadMessage = createUploadMessage();
-
   var showUpload = function () {
+    var uploadMessage = createUploadMessage();
     main.appendChild(uploadMessage);
   };
 
@@ -27,74 +26,50 @@
     main.removeChild(currentMessage);
   };
 
-  var createSuccessMessage = function () {
-    var message = successTemplate.content.cloneNode(true);
-    main.appendChild(message);
-    var currentBlock = main.querySelector('.success');
-    // console.log(currentBlock);
-    var successButton = currentBlock.querySelector('.success__button');
-    // console.log(successButton);
-    var onSuccessButtonClick = function () {
-      main.removeChild(currentBlock);
-      successButton.removeEventListener('click', onSuccessButtonClick);
-    };
-    successButton.addEventListener('click', onSuccessButtonClick);
-
-    var onEscPressClose = function (evt) {
-      if (evt.keycode === window.global.ESC) {
-        main.removeChild(currentBlock);
-        document.removeEventListener('keydown', onEscPressClose);
-      }
-    };
-
-    var onOutsideAreaClickClose = function (evt) {
-      if (evt.currentTarget !== currentBlock) {
-        main.removeChild(currentBlock);
-        document.removeEventListener('click', onOutsideAreaClickClose);
-      }
-    };
-
-    document.addEventListener('keydown', onEscPressClose);
-    document.addEventListener('click', onOutsideAreaClickClose);
-  };
-
-  // var createErrorMessage = function () {};
-
   var createMessage = function (template) {
     var message = template.content.cloneNode(true);
     var currentBlock = '';
+    var innerBlock = '';
     main.appendChild(message);
     if (template === successTemplate) {
       currentBlock = main.querySelector('.success');
+      innerBlock = main.querySelector('.success__inner');
       var successButton = currentBlock.querySelector('.success__button');
       var onSuccessButtonClick = function () {
         main.removeChild(currentBlock);
         successButton.removeEventListener('click', onSuccessButtonClick);
+        document.removeEventListener('click', onOutsideAreaClickClose);
+        document.removeEventListener('keydown', onEscPressClose);
       };
       successButton.addEventListener('click', onSuccessButtonClick);
     } else if (template === errorTemplate) {
-      currentBlock = message.querySelector('.error');
-      var errorButton = currentBlock.querySelector('.error__button');
-      var onErrorButtonClick = function () {
-        main.removeChild(currentBlock);
-        errorButton.removeEventListener('click', onErrorButtonClick);
-      };
-      errorButton.addEventListener('click', onErrorButtonClick);
+      currentBlock = main.querySelector('.error');
+      innerBlock = main.querySelector('.error__inner');
+      var errorButtons = currentBlock.querySelectorAll('.error__button');
+      errorButtons.forEach(function (errorButton) {
+        var onErrorButtonClick = function () {
+          main.removeChild(currentBlock);
+          errorButton.removeEventListener('click', onErrorButtonClick);
+          document.removeEventListener('click', onOutsideAreaClickClose);
+          document.removeEventListener('keydown', onEscPressClose);
+        };
+        errorButton.addEventListener('click', onErrorButtonClick);
+      });
     }
 
     var onEscPressClose = function (evt) {
-      if (evt.keycode === window.global.ESC) {
+      if (evt.keyCode === window.global.ESC) {
         main.removeChild(currentBlock);
         document.removeEventListener('keydown', onEscPressClose);
+        document.removeEventListener('click', onOutsideAreaClickClose);
       }
     };
 
     var onOutsideAreaClickClose = function (evt) {
-      // console.log(currentBlock);
-      if (evt.target !== currentBlock) {
-
+      if (evt.target !== innerBlock && evt.target === currentBlock) {
         main.removeChild(currentBlock);
         document.removeEventListener('click', onOutsideAreaClickClose);
+        document.removeEventListener('keydown', onEscPressClose);
       }
     };
 
@@ -103,19 +78,24 @@
   };
 
   var onLoadSuccess = function (response) {
-    // createMessage(successTemplate);
-    createSuccessMessage();
+    createMessage(successTemplate);
     if (response !== null) {
       window.utility.close(uploadForm);
-      uploadControl.value = null;
+      uploadControl.value = '';
+      window.slider.setDefaultConditions();
+      window.slider.resetConditions();
+      window.slider.resetRadio();
       hideUpload();
     }
   };
 
-  var onLoadError = function () {
-    createMessage(errorTemplate);
-    window.utility.close(uploadForm);
-    // console.log(message);
+  var onLoadError = function (response) {
+    if (response !== null) {
+      createMessage(errorTemplate);
+      window.utility.close(uploadForm);
+      uploadControl.value = '';
+      hideUpload();
+    }
   };
 
   var onFormSubmissionSend = function (evt) {

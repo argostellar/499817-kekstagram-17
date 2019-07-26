@@ -132,6 +132,13 @@
     depth.style.width = '100%';
   };
 
+  var resetRadio = function () {
+    var activeRadio = currentRadio();
+    if (activeRadio !== null) {
+      activeRadio.checked = false;
+    }
+  };
+
   var setDefaultConditions = function () {
     // перемещение пина на максимальное значение
     setPinDefaultPosition();
@@ -150,6 +157,7 @@
 
   window.slider = {
     setDefaultConditions: setDefaultConditions,
-    resetConditions: resetConditions
+    resetConditions: resetConditions,
+    resetRadio: resetRadio
   };
 })();
