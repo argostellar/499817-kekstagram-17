@@ -32,15 +32,12 @@
   // commentsLoader.classList.add('visually-hidden');
 
   var renderComment = function (commentData) {
-    // var AVATAR_AMOUNT = 6;
     var AVATAR_WIDTH = 35;
     var AVATAR_HEIGHT = 35;
-    // var random = window.utility.getRandomNumber(AVATAR_AMOUNT, true);
     var comment = document.createElement('li');
     comment.classList.add('social__comment');
     var avatar = document.createElement('img');
     comment.insertAdjacentElement('afterbegin', avatar);
-    // avatar.src = 'img/avatar-' + random + '.svg';
     avatar.src = commentData.avatar;
     avatar.alt = 'Аватар комментатора фотографии';
     avatar.width = AVATAR_WIDTH;
@@ -49,30 +46,100 @@
     comment.insertAdjacentElement('beforeend', text);
     text.classList.add('social__text');
     text.textContent = commentData.message;
-    // text.textContent = '{{текст комментария}}';
-    commentsField.appendChild(comment);
+    // console.log('COMMENT: ');
+    // console.log(comment);
+    return comment;
   };
 
   var clearCommentField = function () {
     var commentsCollection = social.querySelectorAll('.social__comment');
     var commentsArray = Array.from(commentsCollection);
+    if (commentsLoader.classList.contains('visually-hidden')) {
+      commentsLoader.classList.remove('visually-hidden');
+    }
     commentsArray.forEach(function (comment) {
       comment.remove();
     });
   };
 
+  var addComments = function (commentDatum) {
+    // console.log('COMMENT DATUM: ');
+    // console.log(commentDatum);
+    var fragment = document.createDocumentFragment();
+    var renderingPart = 0;
+    if (commentDatum.length <= 5) {
+      for (var i = 0; i < commentDatum.length; i++) {
+        // console.log(commentDatum[i]);
+        renderingPart = renderComment(commentDatum[i]);
+        // console.log('RENDERING PART: ');
+        // console.log(renderingPart);
+        fragment.appendChild(renderingPart);
+      }
+    } else {
+      for (var j = 0; j < 5; j++) {
+        // console.log(commentDatum[i]);
+        renderingPart = renderComment(commentDatum[j]);
+        // console.log('RENDERING PART: ');
+        // console.log(renderingPart);
+        fragment.appendChild(renderingPart);
+      }
+    }
+    // console.log('FRAGMENT: ');
+    // console.log(fragment);
+    return fragment;
+  };
+
+  var changeCounterValue = function (initialArray, changingArray) {
+    // console.log(commentsMeter.textContent);
+    var maxValue = initialArray.length;
+    var currentValue = changingArray.length;
+    var displayedValue = maxValue - currentValue;
+    commentsMeter.textContent = displayedValue + ' из ' + maxValue + ' комментариев';
+  };
+
+  var renderPartOfComments = function (array) {
+    var portion = array;
+    if (array.length <= 5) {
+      portion = array.splice(0, array.length);
+    } else if (array.length > 5) {
+      portion = array.splice(0, 5);
+    }
+    var renderedPortion = addComments(portion);
+    // console.log('RENDERED PORTION: ');
+    // console.log(renderedPortion);
+    commentsField.appendChild(renderedPortion);
+  };
+
   var openPicture = function (photo) {
     window.utility.open(picture);
-    commentsMeter.classList.add('visually-hidden');
-    commentsLoader.classList.add('visually-hidden');
+    // commentsMeter.classList.add('visually-hidden');
+    // commentsLoader.classList.add('visually-hidden');
     clearCommentField();
     image.src = photo.url;
     likesCount.textContent = photo.likes;
     commentsCount.textContent = photo.comments.length;
-    photo.comments.forEach(function (comment) {
-      renderComment(comment);
-    });
+    var initialArray = photo.comments;
+    var arrayOfComments = initialArray.slice();
+    // console.log('КОПИЯ МАССИВА: ');
+    // console.log(arrayOfComments);
+    renderPartOfComments(arrayOfComments);
+    changeCounterValue(initialArray, arrayOfComments);
     description.textContent = photo.description;
+
+    if (initialArray.length <= 5) {
+      commentsLoader.classList.add('visually-hidden');
+    }
+
+    var onCommentsLoaderClick = function () {
+      renderPartOfComments(arrayOfComments);
+      changeCounterValue(initialArray, arrayOfComments);
+      if (arrayOfComments.length === 0) {
+        commentsLoader.classList.add('visually-hidden');
+        commentsLoader.removeEventListener('click', onCommentsLoaderClick);
+      }
+    };
+
+    commentsLoader.addEventListener('click', onCommentsLoaderClick);
   };
 
   var getPhotoData = function (evt) {
