@@ -3,6 +3,7 @@
 // server.js - взаимодействие с сервером
 (function () {
   var GET_URL = 'https://js.dump.academy/kekstagram/data';
+  var POST_URL = 'https://js.dump.academy/kekstagram';
 
   var imgFilter = document.querySelector('.img-filters');
 
@@ -37,9 +38,26 @@
     imgFilter.classList.remove('img-filters--inactive');
   };
 
+  var save = function (data, onLoad, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
+
+    xhr.open('POST', POST_URL);
+    xhr.send(data);
+  };
+
   window.server = (function () {
     return {
       load: load,
+      save: save,
       imgFilter: imgFilter
     };
   })();
