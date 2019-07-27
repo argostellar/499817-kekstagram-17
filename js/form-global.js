@@ -10,6 +10,9 @@
   var scale = uploadForm.querySelector('.scale');
   var scaleValue = scale.querySelector('.scale__control--value');
   var effectLevel = upload.querySelector('.effect-level');
+  var text = document.querySelector('.text');
+  var commentTextField = text.querySelector('.text__description');
+  var hashtag = text.querySelector('.text__hashtags');
 
   var Value = {
     BASIC: 100,
@@ -20,6 +23,12 @@
 
   var basicScaleValue = Value.BASIC + '%';
 
+  var clearForm = function () {
+    uploadControl.value = '';
+    hashtag.value = '';
+    commentTextField.value = '';
+  };
+
 
   window.form = {
     upload: upload,
@@ -29,8 +38,12 @@
     scale: scale,
     scaleValue: scaleValue,
     effectLevel: effectLevel,
+    text: text,
+    commentTextField: commentTextField,
+    hashtag: hashtag,
     Value: Value,
-    basicScaleValue: basicScaleValue
+    basicScaleValue: basicScaleValue,
+    clearForm: clearForm
   };
 
 })();

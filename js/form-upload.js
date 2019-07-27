@@ -2,7 +2,6 @@
 
 // form-upload.js - модуль, который отвечает за отправку данных формы на сервер;
 (function () {
-  var uploadControl = window.form.uploadControl;
   var uploadForm = window.form.uploadForm;
   var uploadFormItem = window.form.upload.querySelector('.img-upload__form');
 
@@ -81,7 +80,7 @@
     createMessage(successTemplate);
     if (response !== null) {
       window.utility.close(uploadForm);
-      uploadControl.value = '';
+      window.form.clearForm();
       window.slider.setDefaultConditions();
       window.slider.resetConditions();
       window.slider.resetRadio();
@@ -93,7 +92,7 @@
     if (response !== null) {
       createMessage(errorTemplate);
       window.utility.close(uploadForm);
-      uploadControl.value = '';
+      window.form.clearForm();
       hideUpload();
     }
   };
