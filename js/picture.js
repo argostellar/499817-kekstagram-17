@@ -90,10 +90,18 @@
   };
 
   var changeCounterValue = function (initialArray, changingArray) {
-    // console.log(commentsMeter.textContent);
-    var maxValue = initialArray.length;
-    var currentValue = changingArray.length;
-    var displayedValue = maxValue - currentValue;
+    var maxValue = 0;
+    var currentValue = 0;
+    var displayedValue = 0;
+    if (initialArray.length <= 5) {
+      maxValue = initialArray.length;
+      displayedValue = maxValue;
+    } else {
+      maxValue = initialArray.length;
+      currentValue = changingArray.length;
+      displayedValue = maxValue - currentValue;
+    }
+
     commentsMeter.textContent = displayedValue + ' из ' + maxValue + ' комментариев';
   };
 
@@ -112,14 +120,18 @@
 
   var openPicture = function (photo) {
     window.utility.open(picture);
-    // commentsMeter.classList.add('visually-hidden');
-    // commentsLoader.classList.add('visually-hidden');
+
+    var initialArray = 0;
+    var arrayOfComments = 0;
+
     clearCommentField();
     image.src = photo.url;
     likesCount.textContent = photo.likes;
     commentsCount.textContent = photo.comments.length;
-    var initialArray = photo.comments;
-    var arrayOfComments = initialArray.slice();
+    initialArray = photo.comments;
+    // console.log('ИЗНАЧАЛЬНЫЙ МАССИВ: ');
+    // console.log(initialArray);
+    arrayOfComments = initialArray.slice();
     // console.log('КОПИЯ МАССИВА: ');
     // console.log(arrayOfComments);
     renderPartOfComments(arrayOfComments);
@@ -128,18 +140,23 @@
 
     if (initialArray.length <= 5) {
       commentsLoader.classList.add('visually-hidden');
+    } else {
+      var onCommentsLoaderClick = function () {
+        // console.log('КОПИЯ МАССИВА ПРИ КЛИКЕ ДО ОБРАБОТКИ: ');
+        // console.log(arrayOfComments);
+        renderPartOfComments(arrayOfComments);
+        // console.log('CLICK!');
+        // console.log('КОПИЯ МАССИВА ПРИ КЛИКЕ: ');
+        // console.log(arrayOfComments);
+        changeCounterValue(initialArray, arrayOfComments);
+        if (arrayOfComments.length === 0) {
+          commentsLoader.classList.add('visually-hidden');
+          commentsLoader.removeEventListener('click', onCommentsLoaderClick);
+        }
+      };
+
+      commentsLoader.addEventListener('click', onCommentsLoaderClick);
     }
-
-    var onCommentsLoaderClick = function () {
-      renderPartOfComments(arrayOfComments);
-      changeCounterValue(initialArray, arrayOfComments);
-      if (arrayOfComments.length === 0) {
-        commentsLoader.classList.add('visually-hidden');
-        commentsLoader.removeEventListener('click', onCommentsLoaderClick);
-      }
-    };
-
-    commentsLoader.addEventListener('click', onCommentsLoaderClick);
   };
 
   var getPhotoData = function (evt) {
