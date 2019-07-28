@@ -88,14 +88,27 @@
   var onHashtagValidate = function () {
     // validateHashtags();
     hashtag.setCustomValidity(validationRules);
+    hashtag.style.outline = '2px solid red';
   };
 
   var onCommentValidate = function () {
     commentTextField.setCustomValidity(commentValidity);
+    commentTextField.style.outline = '2px solid red';
+  };
+
+  var onCommentBlur = function () {
+    commentTextField.style.outline = '';
+  };
+  var onHashtagBlur = function () {
+    hashtag.style.outline = '';
   };
 
   commentTextField.addEventListener('invalid', onCommentValidate);
-  submit.addEventListener('click', onSubmitValidate);
   hashtag.addEventListener('invalid', onHashtagValidate);
+
+  commentTextField.addEventListener('blur', onCommentBlur);
+  hashtag.addEventListener('blur', onHashtagBlur);
+
+  submit.addEventListener('click', onSubmitValidate);
 
 })();
