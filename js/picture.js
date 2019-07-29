@@ -59,7 +59,6 @@
 
   var addComments = function (commentData) {
     var fragment = document.createDocumentFragment();
-    var renderingPart = 0;
     var upperLimit = 0;
     if (commentData.length <= COMMENTS_UPLOAD_AMOUNT) {
       upperLimit = commentData.length;
@@ -67,7 +66,7 @@
       upperLimit = COMMENTS_UPLOAD_AMOUNT;
     }
     for (var j = 0; j < upperLimit; j++) {
-      renderingPart = renderComment(commentData[j]);
+      var renderingPart = renderComment(commentData[j]);
       fragment.appendChild(renderingPart);
     }
     return fragment;
