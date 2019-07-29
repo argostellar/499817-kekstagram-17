@@ -58,11 +58,12 @@
   };
 
   var addComments = function (commentData) {
+    console.log(commentData);
     var fragment = document.createDocumentFragment();
     var upperLimit = 0;
     if (commentData.length <= COMMENTS_UPLOAD_AMOUNT) {
       upperLimit = commentData.length;
-    } else {
+    } else if (commentData.length > COMMENTS_UPLOAD_AMOUNT) {
       upperLimit = COMMENTS_UPLOAD_AMOUNT;
     }
     for (var j = 0; j < upperLimit; j++) {
@@ -76,7 +77,7 @@
     var maxValue = 0;
     var currentValue = 0;
     var displayedValue = 0;
-    if (initialArray.length <= 5) {
+    if (initialArray.length <= COMMENTS_UPLOAD_AMOUNT) {
       maxValue = initialArray.length;
       displayedValue = maxValue;
     } else {
@@ -90,16 +91,19 @@
 
   var renderPartOfComments = function (array) {
     var portion = array;
-    if (array.length <= 5) {
+    if (array.length <= COMMENTS_UPLOAD_AMOUNT) {
       portion = array.splice(0, array.length);
-    } else if (array.length > 5) {
-      portion = array.splice(0, 5);
+    } else if (array.length > COMMENTS_UPLOAD_AMOUNT) {
+      portion = array.splice(0, COMMENTS_UPLOAD_AMOUNT);
     }
     var renderedPortion = addComments(portion);
     commentsField.appendChild(renderedPortion);
   };
 
   var openPicture = function (photo) {
+    if (!picture.classList.contains('hidden')) {
+      clearCommentField();
+    };
     window.utility.open(picture);
 
     var initialArray = 0;
@@ -115,7 +119,7 @@
     changeCounterValue(initialArray, arrayOfComments);
     description.textContent = photo.description;
 
-    if (initialArray.length <= 5) {
+    if (initialArray.length <= COMMENTS_UPLOAD_AMOUNT) {
       commentsLoader.classList.add('visually-hidden');
     } else {
       var onCommentsLoaderClick = function () {
