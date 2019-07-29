@@ -33,8 +33,7 @@
     var digit = getUrlNumber(photoObject.url);
     var url = pictureElement.querySelector('img');
     url.src = photoObject.url;
-    // url.dataNumber = digit;
-    url.setAttribute('data-number', digit);
+    url.dataset.number = digit;
 
     var likes = pictureElement.querySelector('.picture__likes');
     likes.textContent = photoObject.likes;

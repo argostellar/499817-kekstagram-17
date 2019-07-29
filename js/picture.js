@@ -2,9 +2,13 @@
 
 // picture.js - модуль для отрисовки миниатюры в полноформатное изображение;
 (function () {
-  var photosArray = [];
+  var AVATAR_WIDTH = 35;
+  var AVATAR_HEIGHT = 35;
+  var COMMENTS_UPLOAD_AMOUNT = 5;
+
+  var photoItems = [];
   var onLoadSuccess = function (photos) {
-    photosArray = photos.slice();
+    photoItems = photos.slice();
   };
 
   var onLoadError = function (errorMessage) {
@@ -26,14 +30,7 @@
   var description = social.querySelector('.social__caption');
   var commentsMeter = social.querySelector('.social__comment-count');
 
-
-  // window.utility.open(picture);
-  // commentsMeter.classList.add('visually-hidden');
-  // commentsLoader.classList.add('visually-hidden');
-
   var renderComment = function (commentData) {
-    var AVATAR_WIDTH = 35;
-    var AVATAR_HEIGHT = 35;
     var comment = document.createElement('li');
     comment.classList.add('social__comment');
     var avatar = document.createElement('img');
@@ -46,8 +43,6 @@
     comment.insertAdjacentElement('beforeend', text);
     text.classList.add('social__text');
     text.textContent = commentData.message;
-    // console.log('COMMENT: ');
-    // console.log(comment);
     return comment;
   };
 
@@ -62,30 +57,19 @@
     });
   };
 
-  var addComments = function (commentDatum) {
-    // console.log('COMMENT DATUM: ');
-    // console.log(commentDatum);
+  var addComments = function (commentData) {
     var fragment = document.createDocumentFragment();
     var renderingPart = 0;
-    if (commentDatum.length <= 5) {
-      for (var i = 0; i < commentDatum.length; i++) {
-        // console.log(commentDatum[i]);
-        renderingPart = renderComment(commentDatum[i]);
-        // console.log('RENDERING PART: ');
-        // console.log(renderingPart);
-        fragment.appendChild(renderingPart);
-      }
+    var upperLimit = 0;
+    if (commentData.length <= COMMENTS_UPLOAD_AMOUNT) {
+      upperLimit = commentData.length;
     } else {
-      for (var j = 0; j < 5; j++) {
-        // console.log(commentDatum[i]);
-        renderingPart = renderComment(commentDatum[j]);
-        // console.log('RENDERING PART: ');
-        // console.log(renderingPart);
-        fragment.appendChild(renderingPart);
-      }
+      upperLimit = COMMENTS_UPLOAD_AMOUNT;
     }
-    // console.log('FRAGMENT: ');
-    // console.log(fragment);
+    for (var j = 0; j < upperLimit; j++) {
+      renderingPart = renderComment(commentData[j]);
+      fragment.appendChild(renderingPart);
+    }
     return fragment;
   };
 
@@ -113,8 +97,6 @@
       portion = array.splice(0, 5);
     }
     var renderedPortion = addComments(portion);
-    // console.log('RENDERED PORTION: ');
-    // console.log(renderedPortion);
     commentsField.appendChild(renderedPortion);
   };
 
@@ -129,11 +111,7 @@
     likesCount.textContent = photo.likes;
     commentsCount.textContent = photo.comments.length;
     initialArray = photo.comments;
-    // console.log('ИЗНАЧАЛЬНЫЙ МАССИВ: ');
-    // console.log(initialArray);
     arrayOfComments = initialArray.slice();
-    // console.log('КОПИЯ МАССИВА: ');
-    // console.log(arrayOfComments);
     renderPartOfComments(arrayOfComments);
     changeCounterValue(initialArray, arrayOfComments);
     description.textContent = photo.description;
@@ -142,12 +120,7 @@
       commentsLoader.classList.add('visually-hidden');
     } else {
       var onCommentsLoaderClick = function () {
-        // console.log('КОПИЯ МАССИВА ПРИ КЛИКЕ ДО ОБРАБОТКИ: ');
-        // console.log(arrayOfComments);
         renderPartOfComments(arrayOfComments);
-        // console.log('CLICK!');
-        // console.log('КОПИЯ МАССИВА ПРИ КЛИКЕ: ');
-        // console.log(arrayOfComments);
         changeCounterValue(initialArray, arrayOfComments);
         if (arrayOfComments.length === 0) {
           commentsLoader.classList.add('visually-hidden');
@@ -159,18 +132,37 @@
     }
   };
 
-  var getPhotoData = function (evt) {
-    var element = evt.target;
-    var attribute = element.getAttribute('data-number');
+  var getPhotoData = function (evtTarget) {
+    var element = evtTarget;
+    var attribute = element.dataset.number;
     var attributeNumber = parseInt(attribute, 10);
     var numberIndex = attributeNumber - 1;
-    var currentObject = photosArray[numberIndex];
+    var currentObject = photoItems[numberIndex];
     return currentObject;
   };
 
   var onPictureOpen = function (evt) {
-    if (evt.target.className === 'picture__img') {
-      openPicture(getPhotoData(evt));
+    var clickState = (evt.target.className === 'picture__img');
+    var enterCode = (evt.keyCode === window.global.ENTER);
+    var enterTarget = (evt.target.className === 'picture');
+    var enterState = (enterCode && enterTarget);
+    if (clickState || enterState) {
+      var eventTarget = evt.target;
+      if (enterState) {
+        var nodeList = evt.target.childNodes;
+        var nodeArray = Array.from(nodeList);
+        var node = nodeArray.find(function (element) {
+          var item = element;
+          if (item.classList === undefined) {
+            item = false;
+          } else if (item.classList.contains('picture__img')) {
+            item = element;
+          }
+          return item;
+        });
+        eventTarget = node;
+      }
+      openPicture(getPhotoData(eventTarget));
       document.addEventListener('keydown', onCloseEscPress);
     }
   };
@@ -187,6 +179,7 @@
   };
 
   document.addEventListener('click', onPictureOpen);
+  document.addEventListener('keydown', onPictureOpen);
   closeButton.addEventListener('click', onCloseClick);
 
   window.picture = openPicture;

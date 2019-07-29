@@ -78,7 +78,7 @@
 
   var onLoadSuccess = function (response) {
     createMessage(successTemplate);
-    if (response !== null) {
+    if (response) {
       window.utility.close(uploadForm);
       window.form.clearForm();
       window.slider.setDefaultConditions();
@@ -89,7 +89,7 @@
   };
 
   var onLoadError = function (response) {
-    if (response !== null) {
+    if (response) {
       createMessage(errorTemplate);
       window.utility.close(uploadForm);
       window.form.clearForm();

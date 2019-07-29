@@ -21,7 +21,7 @@
   var currentPhotos = [];
 
   var getSortingDebounce = function () {
-    (window.debounce(renderPhotos))();
+    window.debounce(renderPhotos);
   };
 
   var renderPhotos = function () {
@@ -35,12 +35,7 @@
     filterPopular.classList.add('img-filters__button--active');
     filterNew.classList.remove('img-filters__button--active');
     filterDiscussed.classList.remove('img-filters__button--active');
-    // window.debounce();
     window.clear();
-    // window.debounce();
-    // window.debounce(window.render(currentPhotos));
-    // window.render(currentPhotos);
-    // window.render(currentPhotos);
     getSortingDebounce();
   };
   var getNewSorting = function () {
@@ -57,12 +52,7 @@
     filterPopular.classList.remove('img-filters__button--active');
     filterNew.classList.add('img-filters__button--active');
     filterDiscussed.classList.remove('img-filters__button--active');
-    // window.debounce();
     window.clear();
-    // window.debounce();
-    // window.debounce(window.render(currentPhotos));
-    // window.render(currentPhotos);
-    // window.render(currentPhotos);
     getSortingDebounce();
   };
   var getDiscussedSorting = function () {
@@ -70,7 +60,6 @@
     // в порядке убывания количества комментариев.
     currentPhotos =
       unsortedPhotos.slice().sort(function (left, right) {
-        // менять поведение, смотреть как работает .sort
         var leftScore = left.comments.length;
         var rightScore = right.comments.length;
         var compareValue = window.utility.compareValues(leftScore, rightScore);
@@ -80,12 +69,7 @@
     filterPopular.classList.remove('img-filters__button--active');
     filterNew.classList.remove('img-filters__button--active');
     filterDiscussed.classList.add('img-filters__button--active');
-    // window.debounce();
     window.clear();
-    // window.debounce();
-    // window.debounce(window.render(currentPhotos));
-    // window.render(currentPhotos);
-    // window.render(currentPhotos);
     getSortingDebounce();
   };
 

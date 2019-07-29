@@ -22,7 +22,7 @@
   };
 
   effectsList.addEventListener('click', onRadioClick);
-  var currentRadio = function () {
+  var getCurrentRadio = function () {
     var current = effectsList.querySelector('input:checked');
     return current;
   };
@@ -113,10 +113,10 @@
       var positionPercent = (position / SliderStats.WIDTH) * 100;
       pin.style.left = position + 'px';
       depth.style.width = positionPercent + '%';
-      changeLevel(currentRadio().value, calculateChangeValue());
+      changeLevel(getCurrentRadio().value, calculateChangeValue());
     };
     var onPinMouseUp = function () {
-      changeLevel(currentRadio().value, calculateChangeValue());
+      changeLevel(getCurrentRadio().value, calculateChangeValue());
       document.removeEventListener('mousemove', onPinMouseMove);
       document.removeEventListener('mouseup', onPinMouseUp);
     };
@@ -133,8 +133,8 @@
   };
 
   var resetRadio = function () {
-    var activeRadio = currentRadio();
-    if (activeRadio !== null) {
+    var activeRadio = getCurrentRadio();
+    if (activeRadio) {
       activeRadio.checked = false;
     }
   };

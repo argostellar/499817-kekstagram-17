@@ -4,6 +4,8 @@
 (function () {
   var GET_URL = 'https://js.dump.academy/kekstagram/data';
   var POST_URL = 'https://js.dump.academy/kekstagram';
+  var TIMEOUT_TIME = 10000;
+  var SUCCESS_STATUS = 200;
 
   var imgFilter = document.querySelector('.img-filters');
 
@@ -14,9 +16,8 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_STATUS) {
         onLoad(xhr.response);
-        // console.log(xhr.response);
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
@@ -30,7 +31,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = TIMEOUT_TIME; // 10s
 
     xhr.open('GET', GET_URL);
     xhr.send();
@@ -43,7 +44,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_STATUS) {
         onLoad(xhr.response);
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);

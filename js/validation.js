@@ -29,28 +29,25 @@
   var commentValidity = 'Комментарий не может быть больше 140 символов. ';
 
   var sortEmptyElements = function (element) {
-    var identifier = 0;
-    if (element === '') {
-      identifier = -1;
-    }
+    var identifier = element === '' ? -1 : 0;
     return identifier;
   };
 
   var removeEmptyElement = function (array) {
     var currentArray = array;
     var isEmpty = currentArray.includes('');
-    if (isEmpty === true) {
+    if (isEmpty) {
       currentArray = currentArray.sort(function (item) {
         return sortEmptyElements(item);
       });
-      var indexArray = [];
+      var indexes = [];
       for (var i = 0; i < currentArray.length; i++) {
         if (currentArray[i] === '') {
-          indexArray[i] = i;
+          indexes[i] = i;
         }
       }
-      for (var j = 0; j < indexArray.length; j++) {
-        currentArray.splice(indexArray[j], 1);
+      for (var j = 0; j < indexes.length; j++) {
+        currentArray.splice(indexes[j], 1);
       }
     }
     return currentArray;
@@ -75,18 +72,17 @@
       testArray.splice(0, 1);
       if (testArray.includes(value)) {
         error = validationDict['no repeat'];
+        return error;
       }
     }
     return error;
   };
 
   var onSubmitValidate = function () {
-    // evt.preventDefault();
     validateHashtags();
   };
 
   var onHashtagValidate = function () {
-    // validateHashtags();
     hashtag.setCustomValidity(validationRules);
     hashtag.style.outline = '2px solid red';
   };

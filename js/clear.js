@@ -6,8 +6,8 @@
 
   var clear = function () {
     var picturesCollection = picturesBlock.querySelectorAll('.picture');
-    var picturesArray = Array.from(picturesCollection);
-    picturesArray.forEach(function (it) {
+    var pictures = Array.from(picturesCollection);
+    pictures.forEach(function (it) {
       picturesBlock.removeChild(it);
     });
   };
