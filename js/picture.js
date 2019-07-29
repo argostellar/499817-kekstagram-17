@@ -58,7 +58,6 @@
   };
 
   var addComments = function (commentData) {
-    console.log(commentData);
     var fragment = document.createDocumentFragment();
     var upperLimit = 0;
     if (commentData.length <= COMMENTS_UPLOAD_AMOUNT) {
@@ -103,7 +102,7 @@
   var openPicture = function (photo) {
     if (!picture.classList.contains('hidden')) {
       clearCommentField();
-    };
+    }
     window.utility.open(picture);
 
     var initialArray = 0;
