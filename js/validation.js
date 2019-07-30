@@ -57,20 +57,20 @@
     var inputValue = hashtag.value;
     inputValue = inputValue.toLowerCase();
     var separator = new RegExp('[ ]+');
-    var valuesArray = inputValue.split(separator);
-    var clearArray = removeEmptyElement(valuesArray);
-    var errorMessage = checkEqual(clearArray);
+    var values = inputValue.split(separator);
+    var clearValues = removeEmptyElement(values);
+    var errorMessage = checkEqual(clearValues);
     hashtag.setCustomValidity(errorMessage);
   };
 
   // Проверка на наличие одинаковых хэш-тегов: работает
   var checkEqual = function (array) {
     var error = '';
-    var testArray = array.slice();
+    var estimatedValues = array.slice();
     for (var i = 0; i < array.length; i++) {
       var value = array[i];
-      testArray.splice(0, 1);
-      if (testArray.includes(value)) {
+      estimatedValues.splice(0, 1);
+      if (estimatedValues.includes(value)) {
         error = validationDict['no repeat'];
         return error;
       }

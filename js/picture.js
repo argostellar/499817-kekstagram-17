@@ -48,23 +48,18 @@
 
   var clearCommentField = function () {
     var commentsCollection = social.querySelectorAll('.social__comment');
-    var commentsArray = Array.from(commentsCollection);
+    var comments = Array.from(commentsCollection);
     if (commentsLoader.classList.contains('visually-hidden')) {
       commentsLoader.classList.remove('visually-hidden');
     }
-    commentsArray.forEach(function (comment) {
+    comments.forEach(function (comment) {
       comment.remove();
     });
   };
 
   var addComments = function (commentData) {
     var fragment = document.createDocumentFragment();
-    var upperLimit = 0;
-    if (commentData.length <= COMMENTS_UPLOAD_AMOUNT) {
-      upperLimit = commentData.length;
-    } else if (commentData.length > COMMENTS_UPLOAD_AMOUNT) {
-      upperLimit = COMMENTS_UPLOAD_AMOUNT;
-    }
+    var upperLimit = Math.min(commentData.length, COMMENTS_UPLOAD_AMOUNT);
     for (var j = 0; j < upperLimit; j++) {
       var renderingPart = renderComment(commentData[j]);
       fragment.appendChild(renderingPart);
@@ -105,26 +100,26 @@
     }
     window.utility.open(picture);
 
-    var initialArray = 0;
-    var arrayOfComments = 0;
+    var initialComments = 0;
+    var copiedComments = 0;
 
     clearCommentField();
     image.src = photo.url;
     likesCount.textContent = photo.likes;
     commentsCount.textContent = photo.comments.length;
-    initialArray = photo.comments;
-    arrayOfComments = initialArray.slice();
-    renderPartOfComments(arrayOfComments);
-    changeCounterValue(initialArray, arrayOfComments);
+    initialComments = photo.comments;
+    copiedComments = initialComments.slice();
+    renderPartOfComments(copiedComments);
+    changeCounterValue(initialComments, copiedComments);
     description.textContent = photo.description;
 
-    if (initialArray.length <= COMMENTS_UPLOAD_AMOUNT) {
+    if (initialComments.length <= COMMENTS_UPLOAD_AMOUNT) {
       commentsLoader.classList.add('visually-hidden');
     } else {
       var onCommentsLoaderClick = function () {
-        renderPartOfComments(arrayOfComments);
-        changeCounterValue(initialArray, arrayOfComments);
-        if (arrayOfComments.length === 0) {
+        renderPartOfComments(copiedComments);
+        changeCounterValue(initialComments, copiedComments);
+        if (copiedComments.length === 0) {
           commentsLoader.classList.add('visually-hidden');
           commentsLoader.removeEventListener('click', onCommentsLoaderClick);
         }
@@ -143,45 +138,57 @@
     return currentObject;
   };
 
-  var onPictureOpen = function (evt) {
+  var onPictureClickOpen = function (evt) {
     var clickState = (evt.target.className === 'picture__img');
+    if (clickState) {
+      var eventTarget = evt.target;
+      openPicture(getPhotoData(eventTarget));
+      document.addEventListener('keydown', onCloseEscPress);
+      document.removeEventListener('click', onPictureClickOpen);
+    }
+  };
+
+  var onPictureKeydownOpen = function (evt) {
     var enterCode = (evt.keyCode === window.global.ENTER);
     var enterTarget = (evt.target.className === 'picture');
     var enterState = (enterCode && enterTarget);
-    if (clickState || enterState) {
+    if (enterState) {
       var eventTarget = evt.target;
-      if (enterState) {
-        var nodeList = evt.target.childNodes;
-        var nodeArray = Array.from(nodeList);
-        var node = nodeArray.find(function (element) {
-          var item = element;
-          if (item.classList === undefined) {
-            item = false;
-          } else if (item.classList.contains('picture__img')) {
-            item = element;
-          }
-          return item;
-        });
-        eventTarget = node;
-      }
-      openPicture(getPhotoData(eventTarget));
-      document.addEventListener('keydown', onCloseEscPress);
+      var nodeList = evt.target.childNodes;
+      var nodes = Array.from(nodeList);
+      var node = nodes.find(function (element) {
+        var item = element;
+        if (item.classList === undefined) {
+          item = false;
+        } else if (item.classList.contains('picture__img')) {
+          item = element;
+        }
+        return item;
+      });
+      eventTarget = node;
     }
+    openPicture(getPhotoData(eventTarget));
+    document.addEventListener('keydown', onCloseEscPress);
+    document.removeEventListener('keydown', onPictureKeydownOpen);
   };
 
   var onCloseClick = function () {
     window.utility.close(picture);
+    document.addEventListener('click', onPictureClickOpen);
+    document.addEventListener('keydown', onPictureKeydownOpen);
   };
 
   var onCloseEscPress = function (evt) {
     if (evt.keyCode === window.global.ESC) {
       window.utility.close(picture);
       document.removeEventListener('keydown', onCloseEscPress);
+      document.addEventListener('click', onPictureClickOpen);
+      document.addEventListener('keydown', onPictureKeydownOpen);
     }
   };
 
-  document.addEventListener('click', onPictureOpen);
-  document.addEventListener('keydown', onPictureOpen);
+  document.addEventListener('click', onPictureClickOpen);
+  document.addEventListener('keydown', onPictureKeydownOpen);
   closeButton.addEventListener('click', onCloseClick);
 
   window.picture = openPicture;
